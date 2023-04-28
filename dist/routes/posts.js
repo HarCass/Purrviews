@@ -4,9 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const users_1 = __importDefault(require("./users"));
-const posts_1 = __importDefault(require("./posts"));
-const apiRouter = express_1.default.Router();
-apiRouter.use('/users', users_1.default);
-apiRouter.use('/posts', posts_1.default);
-exports.default = apiRouter;
+const posts_1 = require("../controllers/posts");
+const postsRouter = express_1.default.Router();
+postsRouter.get('/', posts_1.getPosts);
+exports.default = postsRouter;

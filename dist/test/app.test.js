@@ -8,6 +8,9 @@ const app_1 = __importDefault(require("../app"));
 const mocha_1 = require("mocha");
 const assert_1 = __importDefault(require("assert"));
 const connection_1 = require("../db/connection");
+const chai_1 = __importDefault(require("chai"));
+const should = chai_1.default.should();
+const expect = chai_1.default.expect;
 (0, mocha_1.after)(() => connection_1.connection.close());
 (0, mocha_1.describe)('Unavailable Endpoint', () => {
     it('404: returns a status 404 and nothing else', () => {
@@ -20,6 +23,15 @@ const connection_1 = require("../db/connection");
     it('200: returns an array of all users', () => {
         return (0, supertest_1.default)(app_1.default)
             .get('/api/users')
-            .then(res => assert_1.default.equal(res.status, 200));
+            .then(res => {
+            assert_1.default.equal(res.status, 200);
+            should.exist(res.body);
+            const { users } = res.body;
+            users.forEach(({ user }) => {
+                should.exist(user);
+                user.should.be.an('object');
+                user.should.have.keys('user_id', 'avatar', 'description', 'username');
+            });
+        });
     });
 });

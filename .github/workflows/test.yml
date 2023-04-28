@@ -17,4 +17,4 @@ jobs:
         run: npm ci
 
       - name: Run Tests
-        run: ATLAS_URI={{ secrets.DB_URL }} npm t
+        run: ATLAS_URI=${{ secrets.DB_URL }} npm t

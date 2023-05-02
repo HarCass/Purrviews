@@ -21,3 +21,16 @@ export const checkUsernameExists = (username: string) => {
         if(!data) return Promise.reject({status: 400, msg: 'Username does not exist'});
     });
 }
+
+export const findPostById = (id: string) => {
+    if (!ObjectId.isValid(id)) {
+        return Promise.reject({status: 400, msg: "Invalid id"})
+    }
+    return collection.findOne({_id: new ObjectId(id)})
+    .then(data => {
+        if (!data) {
+            return Promise.reject({status: 400, msg: "Post does not exist"})
+        }
+        return data;
+    })
+}

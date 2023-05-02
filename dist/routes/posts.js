@@ -8,4 +8,5 @@ const posts_1 = require("../controllers/posts");
 const postsRouter = express_1.default.Router();
 postsRouter.get('/', posts_1.getPosts);
 postsRouter.post('/', posts_1.postPost);
+postsRouter.get('/:post_id', posts_1.getPostById);
 exports.default = postsRouter;

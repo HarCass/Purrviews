@@ -23,3 +23,13 @@ export const findUsersByUsername = (username: any) => {
         }
     });
 };
+
+export const removeUser = (username: any) => {
+    return collection.deleteOne({ username: username }).then((users) => {
+        if (users.deletedCount === 0) {
+            return Promise.reject({ msg: "Username doesn't exist", status: 404 });
+        } else {
+            return users;
+        }
+    });
+};

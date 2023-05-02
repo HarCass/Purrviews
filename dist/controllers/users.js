@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByUsername = exports.postUser = exports.getUsers = void 0;
+exports.deleteUser = exports.getUserByUsername = exports.postUser = exports.getUsers = void 0;
 const users_1 = require("../models/users");
 const getUsers = (req, res, next) => {
     return (0, users_1.findUsers)()
@@ -23,3 +23,12 @@ const getUserByUsername = (req, res, next) => {
         .catch(next);
 };
 exports.getUserByUsername = getUserByUsername;
+const deleteUser = (req, res, next) => {
+    const { username } = req.params;
+    return (0, users_1.removeUser)(username)
+        .then(() => {
+        res.sendStatus(204);
+    })
+        .catch(next);
+};
+exports.deleteUser = deleteUser;

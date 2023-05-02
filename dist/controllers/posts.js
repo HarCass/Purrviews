@@ -9,7 +9,8 @@ const getPosts = (req, res, next) => {
 exports.getPosts = getPosts;
 const postPost = (req, res, next) => {
     const data = req.body;
-    return (0, posts_1.insertPost)(data)
+    return (0, posts_1.checkUsernameExists)(data.username)
+        .then(() => (0, posts_1.insertPost)(data))
         .then(post => res.status(201).send({ post }))
         .catch(next);
 };

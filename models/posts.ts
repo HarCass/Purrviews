@@ -13,3 +13,11 @@ export const insertPost = (post: any) => {
     return collection.insertOne(post)
     .then((data ) => collection.findOne({_id: new ObjectId(data.insertedId)}));
 }
+
+export const checkUsernameExists = (username: string) => {
+    const userCollection = db.collection('users');
+    return userCollection.findOne({username})
+    .then(data => {
+        if(!data) return Promise.reject({status: 400, msg: 'Username does not exist'});
+    });
+}

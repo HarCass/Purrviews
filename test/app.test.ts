@@ -117,6 +117,36 @@ describe('POSTS /api/posts', () => {
         });
     });
     it('400: returns a bad request if data format is wrong', () => {
-
+        const newPost = {
+            "location": "London, UK",
+            "username": "Ellie123",
+            "description": "Is this a cat?",
+            "lat": 51.5072,
+            "long": 0.1276
+        }
+        return request(app)
+        .post('/api/posts')
+        .send(newPost)
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, 'Invalid format');
+        });
+    });
+    it('400: returns a bad request if the username does not exist', () => {
+        const newPost = {
+            "img_url": "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
+            "location": "London, UK",
+            "username": "Not_a_User",
+            "description": "Is this a cat?",
+            "lat": 51.5072,
+            "long": 0.1276
+        }
+        return request(app)
+        .post('/api/posts')
+        .send(newPost)
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, 'Username does not exist');
+        });
     });
 });

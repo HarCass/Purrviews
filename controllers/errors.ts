@@ -20,3 +20,11 @@ export const dbErrors : ErrorRequestHandler = (err, req, res, next) => {
         next(err)
     }
 }
+
+// export const dbErrors : ErrorRequestHandler = (err, req, res, next) => {
+//     if (err.code) {
+//         res.status(400).send({msg: 'Username already exists'})
+//     } else {
+//         next(err)
+//     }
+// }

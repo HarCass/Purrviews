@@ -17,3 +17,7 @@ export const insertUser = (user: any) => {
         return collection.findOne({_id: new ObjectId(data.insertedId)})
     })
 }
+
+export const findUsersByUsername = (username: any) => {
+    return collection.findOne({username: username});
+}

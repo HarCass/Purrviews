@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../app';
-import { describe, after, before } from 'mocha';
+import { describe, after } from 'mocha';
 import assert from 'assert';
 import {connection} from '../db/connection';
 import chai from 'chai';
@@ -52,7 +52,7 @@ describe('GET /api/posts', () => {
 });
 
 describe('POST /api/users', () => {
-    it('201: inserts a user into the database', () => {
+    it('201: inserts a user into the database and returns the new user', () => {
         const testUser = {
             username: "Steve1",
             description: "Super cool cat lover",
@@ -61,7 +61,6 @@ describe('POST /api/users', () => {
         .post('/api/users')
         .send(testUser)
         .then(res => {
-            console.log(res.body)
             assert.equal(res.status, 201);
             const {user} = res.body;
             should.exist(user);
@@ -77,9 +76,8 @@ describe('POST /api/users', () => {
         .post('/api/users')
         .send(testUser)
         .then(res => {
-            console.log(res.body)
             assert.equal(res.status, 400);
-            assert.equal(res.body.msg, "Invalid format")
+            assert.equal(res.body.msg, "Invalid format");
         })
     })
     it('400: returns a bad request if username already exists', () => {
@@ -91,9 +89,64 @@ describe('POST /api/users', () => {
         .post('/api/users')
         .send(testUser)
         .then(res => {
-            console.log(res.body)
             assert.equal(res.status, 400);
-            assert.equal(res.body.msg, "Username already exists")
-        })
-    })
-})
+            assert.equal(res.body.msg, "Username already exists");
+        });
+    });
+});
+
+describe('POSTS /api/posts', () => {
+    it('201: inserts a post into the database and returns the new post', () => {
+        const newPost = {
+            "img_url": "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
+            "location": "London, UK",
+            "username": "Ellie123",
+            "description": "Is this a cat?",
+            "lat": 51.5072,
+            "long": 0.1276
+        }
+        return request(app)
+        .post('/api/posts')
+        .send(newPost)
+        .then(res => {
+            assert.equal(res.status, 201);
+            const {post} = res.body;
+            should.exist(post);
+            post.should.be.an('object');
+            post.should.have.keys('_id', 'img_url', 'location', 'username', 'description', 'lat', 'long', 'votes', 'posted_at');
+        });
+    });
+    it('400: returns a bad request if data format is wrong', () => {
+        const newPost = {
+            "location": "London, UK",
+            "username": "Ellie123",
+            "description": "Is this a cat?",
+            "lat": 51.5072,
+            "long": 0.1276
+        }
+        return request(app)
+        .post('/api/posts')
+        .send(newPost)
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, 'Invalid format');
+        });
+    });
+    it('400: returns a bad request if the username does not exist', () => {
+        const newPost = {
+            "img_url": "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
+            "location": "London, UK",
+            "username": "Not_a_User",
+            "description": "Is this a cat?",
+            "lat": 51.5072,
+            "long": 0.1276
+        }
+        return request(app)
+        .post('/api/posts')
+        .send(newPost)
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, 'Username does not exist');
+        });
+    });
+});

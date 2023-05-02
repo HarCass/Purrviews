@@ -274,7 +274,7 @@ describe("GET /api/users/:username", () => {
 describe('PATCH /api/posts/:post_id', () => {
     it('200: updates the specififed posts votes and returns the new post', () => {
         const newVotes = {
-            inc_votes: 1
+            inc_votes: -1
         }
         return db
         .collection("posts")
@@ -300,8 +300,24 @@ describe('PATCH /api/posts/:post_id', () => {
                     "posted_at"
                 );
                 assert.equal(post._id, data!._id);
-                assert.equal(post.votes, data!.votes + 1);
+                assert.equal(post.votes, data!.votes - 1);
             });
+        });
+    });
+});
+
+describe("DELETE /api/users/:username", () => {
+    it("204: Deletes a user by their username", () => {
+        return request(app)
+        .delete("/api/users/Harry111")
+        .expect(204)
+    })
+    it("404: username not found", () => {
+        return request(app)
+        .delete("/api/users/iamadog")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).to.equal("Username doesn't exist")
         });
     });
 });

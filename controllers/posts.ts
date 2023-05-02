@@ -1,4 +1,4 @@
-import { findPosts, insertPost, checkUsernameExists, findPostById } from "../models/posts"
+import { findPosts, insertPost, checkUsernameExists, findPostById, updatePostById } from "../models/posts"
 import { RequestHandler } from "express";
 
 export const getPosts: RequestHandler = (req, res, next) => {
@@ -23,6 +23,7 @@ export const getPostById: RequestHandler = (req, res, next) => {
 
 export const patchPostById: RequestHandler = (req, res, next) => {
     const {post_id} = req.params;
-    console.log(req.body);
-    return updatePostById()
+    const {inc_votes} = req.body;
+    return updatePostById(post_id, inc_votes)
+    .then(({value}) => res.status(200).send({post: value}));
 }

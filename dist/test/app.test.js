@@ -237,7 +237,7 @@ const expect = chai_1.default.expect;
 (0, mocha_1.describe)('PATCH /api/posts/:post_id', () => {
     it('200: updates the specififed posts votes and returns the new post', () => {
         const newVotes = {
-            inc_votes: 1
+            inc_votes: -1
         };
         return connection_1.db
             .collection("posts")
@@ -253,8 +253,23 @@ const expect = chai_1.default.expect;
                 post.should.be.an('object');
                 post.should.have.keys("_id", "img_url", "location", "username", "description", "lat", "long", "votes", "posted_at");
                 assert_1.default.equal(post._id, data._id);
-                assert_1.default.equal(post.votes, data.votes + 1);
+                assert_1.default.equal(post.votes, data.votes - 1);
             });
+        });
+    });
+});
+(0, mocha_1.describe)("DELETE /api/users/:username", () => {
+    it("204: Deletes a user by their username", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/users/Harry111")
+            .expect(204);
+    });
+    it("404: username not found", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/users/iamadog")
+            .expect(404)
+            .then(({ body }) => {
+            expect(body.msg).to.equal("Username doesn't exist");
         });
     });
 });

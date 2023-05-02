@@ -34,3 +34,7 @@ export const findPostById = (id: string) => {
         return data;
     })
 }
+
+export const updatePostById = (id: string, incVotes: number) => {
+    return collection.findOneAndUpdate({_id: new ObjectId(id)}, {$inc: {'votes': incVotes}}, {returnDocument : 'after'});
+}

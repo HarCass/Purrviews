@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findPostById = exports.checkUsernameExists = exports.insertPost = exports.findPosts = void 0;
+exports.updatePostById = exports.findPostById = exports.checkUsernameExists = exports.insertPost = exports.findPosts = void 0;
 const connection_1 = require("../db/connection");
 const mongodb_1 = require("mongodb");
 const collection = connection_1.db.collection('posts');
@@ -37,3 +37,7 @@ const findPostById = (id) => {
     });
 };
 exports.findPostById = findPostById;
+const updatePostById = (id, incVotes) => {
+    return collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $inc: { 'votes': incVotes } }, { returnDocument: 'after' });
+};
+exports.updatePostById = updatePostById;

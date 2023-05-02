@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkUsernameExists = exports.insertPost = exports.findPosts = void 0;
+exports.findPostById = exports.checkUsernameExists = exports.insertPost = exports.findPosts = void 0;
 const connection_1 = require("../db/connection");
 const mongodb_1 = require("mongodb");
 const collection = connection_1.db.collection('posts');
@@ -24,3 +24,16 @@ const checkUsernameExists = (username) => {
     });
 };
 exports.checkUsernameExists = checkUsernameExists;
+const findPostById = (id) => {
+    if (!mongodb_1.ObjectId.isValid(id)) {
+        return Promise.reject({ status: 400, msg: "Invalid id" });
+    }
+    return collection.findOne({ _id: new mongodb_1.ObjectId(id) })
+        .then(data => {
+        if (!data) {
+            return Promise.reject({ status: 400, msg: "Post does not exist" });
+        }
+        return data;
+    });
+};
+exports.findPostById = findPostById;

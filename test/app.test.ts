@@ -2,8 +2,9 @@ import request from 'supertest';
 import app from '../app';
 import { describe, after } from 'mocha';
 import assert from 'assert';
-import {connection} from '../db/connection';
+import {connection, db} from '../db/connection';
 import chai from 'chai';
+import { ObjectId } from 'mongodb';
 const should = chai.should();
 const expect = chai.expect;
 
@@ -149,4 +150,37 @@ describe('POSTS /api/posts', () => {
             assert.equal(res.body.msg, 'Username does not exist');
         });
     });
+});
+
+describe('GET /api/posts/:post_id', () => {
+    it('200: returns post by post_id', () => {
+        return db.collection('posts').findOne()
+        .then(data => {
+            return request(app)
+            .get(`/api/posts/${data!._id}`)
+            .then(res => {
+                assert.equal(res.status, 200);
+                const {post} = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys('_id', 'img_url', 'location', 'username', 'description', 'lat', 'long', 'votes', 'posted_at');
+                assert.equal(post._id, data!._id)
+            });})
+    })
+    it('400: returns bad request if the post_id is invalid', () => {
+            return request(app)
+            .get(`/api/posts/not_a_post`)
+            .then(res => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.msg, "Invalid id");
+            });
+    })
+    it('400: returns bad request if the post_id does not exist', () => {
+        return request(app)
+        .get(`/api/posts/${new ObjectId}`)
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Post does not exist");
+        });
+})
 });

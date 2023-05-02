@@ -12,4 +12,6 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use('/api', api_1.default);
 app.use(errors_1.customErrors);
+app.use(errors_1.dbErrors);
+app.use(errors_1.serverErrors);
 exports.default = app;

@@ -8,6 +8,7 @@ export const findUsers = () => {
 }
 
 export const insertUser = (user: any) => {
+    user.cats = []
     if (!user.username) {
         return Promise.reject({msg: "Invalid format", status: 400})
     }

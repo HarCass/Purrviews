@@ -33,3 +33,20 @@ export const removeUser = (username: any) => {
         }
     });
 };
+
+export const findUserCats = (username: string) => {
+    const filter = {
+        username: username,
+    };
+
+    const projection = {
+        cats: 1,
+    };
+
+    return collection.findOne(filter, { projection }).then((data) => {
+        if (!data) {
+            return Promise.reject({ status: 400, msg: "Username does not exist" });
+        }
+        return data.cats;
+    });
+};

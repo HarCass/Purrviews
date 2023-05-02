@@ -1,10 +1,9 @@
-import { findUsers, insertUser, findUsersByUsername, removeUser } from "../models/users";
+import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats } from "../models/users";
 import { RequestHandler } from "express";
 
 export const getUsers: RequestHandler = (req, res, next) => {
-    return findUsers()
-    .then(users => res.status(200).send({users}));
-}
+    return findUsers().then((users) => res.status(200).send({ users }));
+};
 
 export const postUser: RequestHandler = (req, res, next) => {
     const data = req.body;
@@ -17,7 +16,7 @@ export const getUserByUsername = (req: any, res: any, next: any) => {
     const { username } = req.params;
     return findUsersByUsername(username)
         .then((users) => {
-                res.status(200).send({ users });
+            res.status(200).send({ users });
         })
         .catch(next);
 };
@@ -25,8 +24,15 @@ export const getUserByUsername = (req: any, res: any, next: any) => {
 export const deleteUser = (req: any, res: any, next: any) => {
     const { username } = req.params;
     return removeUser(username)
-    .then(() => {
-        res.sendStatus(204)
-    })
-    .catch(next)
-}
+        .then(() => {
+            res.sendStatus(204);
+        })
+        .catch(next);
+};
+
+export const getUserCats: RequestHandler = (req, res, next) => {
+    const { username } = req.params;
+    return findUserCats(username)
+        .then((cats) => res.status(200).send({ cats }))
+        .catch(next);
+};

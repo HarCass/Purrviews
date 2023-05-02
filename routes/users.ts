@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, postUser, getUserByUsername, deleteUser } from "../controllers/users";
+import { getUsers, postUser, getUserByUsername, getUserCats, deleteUser } from "../controllers/users";
 
 const usersRouter = express.Router();
 
@@ -10,5 +10,7 @@ usersRouter.post("/", postUser);
 usersRouter.get("/:username", getUserByUsername);
 
 usersRouter.delete("/:username", deleteUser);
+
+usersRouter.get('/:username/cats', getUserCats);
 
 export default usersRouter;

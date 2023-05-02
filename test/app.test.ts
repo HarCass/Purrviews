@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../app';
-import { describe, after } from 'mocha';
+import { describe, after, before } from 'mocha';
 import assert from 'assert';
 import {connection} from '../db/connection';
 import chai from 'chai';
@@ -50,3 +50,50 @@ describe('GET /api/posts', () => {
         });
     });
 });
+
+describe('POST /api/users', () => {
+    it('201: inserts a user into the database', () => {
+        const testUser = {
+            username: "Steve1",
+            description: "Super cool cat lover",
+            avatar: "https://i.pinimg.com/736x/a7/9a/f3/a79af309957138af9ef7696b261b71fe.jp…"}
+        return request(app)
+        .post('/api/users')
+        .send(testUser)
+        .then(res => {
+            console.log(res.body)
+            assert.equal(res.status, 201);
+            const {user} = res.body;
+            should.exist(user);
+            user.should.be.an('object');
+            user.should.have.keys('_id', 'cats', 'avatar', 'description', 'username');
+        })
+    })
+    it('400: returns a bad request if data format is wrong', () => {
+        const testUser = {
+            description: "Super cool cat lover",
+            avatar: "https://i.pinimg.com/736x/a7/9a/f3/a79af309957138af9ef7696b261b71fe.jp…"}
+            return request(app)
+        .post('/api/users')
+        .send(testUser)
+        .then(res => {
+            console.log(res.body)
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid format")
+        })
+    })
+    it('400: returns a bad request if username already exists', () => {
+        const testUser = {
+            username: "Steve1",
+            description: "Super cool cat lover",
+            avatar: "https://i.pinimg.com/736x/a7/9a/f3/a79af309957138af9ef7696b261b71fe.jp…"}
+            return request(app)
+        .post('/api/users')
+        .send(testUser)
+        .then(res => {
+            console.log(res.body)
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Username already exists")
+        })
+    })
+})

@@ -1,8 +1,12 @@
 import express from 'express';
-import { getPosts } from '../controllers/posts';
+import { getPosts, postPost, getPostById } from '../controllers/posts';
 
 const postsRouter = express.Router();
 
 postsRouter.get('/', getPosts);
+
+postsRouter.post('/', postPost);
+
+postsRouter.get('/:post_id', getPostById);
 
 export default postsRouter;

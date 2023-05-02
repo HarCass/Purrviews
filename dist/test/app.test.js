@@ -9,6 +9,7 @@ const mocha_1 = require("mocha");
 const assert_1 = __importDefault(require("assert"));
 const connection_1 = require("../db/connection");
 const chai_1 = __importDefault(require("chai"));
+const mongodb_1 = require("mongodb");
 const should = chai_1.default.should();
 const expect = chai_1.default.expect;
 (0, mocha_1.after)(() => connection_1.connection.close());
@@ -52,7 +53,7 @@ const expect = chai_1.default.expect;
     });
 });
 (0, mocha_1.describe)("POST /api/users", () => {
-    it("201: inserts a user into the database", () => {
+    it("201: inserts a user into the database and returns the new user", () => {
         const testUser = {
             username: "Steve1",
             description: "Super cool cat lover",
@@ -62,7 +63,6 @@ const expect = chai_1.default.expect;
             .post("/api/users")
             .send(testUser)
             .then((res) => {
-            console.log(res.body);
             assert_1.default.equal(res.status, 201);
             const { user } = res.body;
             should.exist(user);
@@ -79,7 +79,6 @@ const expect = chai_1.default.expect;
             .post("/api/users")
             .send(testUser)
             .then((res) => {
-            console.log(res.body);
             assert_1.default.equal(res.status, 400);
             assert_1.default.equal(res.body.msg, "Invalid format");
         });
@@ -94,13 +93,102 @@ const expect = chai_1.default.expect;
             .post("/api/users")
             .send(testUser)
             .then((res) => {
-            console.log(res.body);
             assert_1.default.equal(res.status, 400);
             assert_1.default.equal(res.body.msg, "Username already exists");
         });
     });
 });
-mocha_1.describe.only("GET /api/users/:username", () => {
+(0, mocha_1.describe)("POSTS /api/posts", () => {
+    it("201: inserts a post into the database and returns the new post", () => {
+        const newPost = {
+            img_url: "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
+            location: "London, UK",
+            username: "Ellie123",
+            description: "Is this a cat?",
+            lat: 51.5072,
+            long: 0.1276,
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .post("/api/posts")
+            .send(newPost)
+            .then((res) => {
+            assert_1.default.equal(res.status, 201);
+            const { post } = res.body;
+            should.exist(post);
+            post.should.be.an("object");
+            post.should.have.keys("_id", "img_url", "location", "username", "description", "lat", "long", "votes", "posted_at");
+        });
+    });
+    it("400: returns a bad request if data format is wrong", () => {
+        const newPost = {
+            location: "London, UK",
+            username: "Ellie123",
+            description: "Is this a cat?",
+            lat: 51.5072,
+            long: 0.1276,
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .post("/api/posts")
+            .send(newPost)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it("400: returns a bad request if the username does not exist", () => {
+        const newPost = {
+            img_url: "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
+            location: "London, UK",
+            username: "Not_a_User",
+            description: "Is this a cat?",
+            lat: 51.5072,
+            long: 0.1276,
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .post("/api/posts")
+            .send(newPost)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
+});
+(0, mocha_1.describe)("GET /api/posts/:post_id", () => {
+    it("200: returns post by post_id", () => {
+        return connection_1.db
+            .collection("posts")
+            .findOne()
+            .then((data) => {
+            return (0, supertest_1.default)(app_1.default)
+                .get(`/api/posts/${data._id}`)
+                .then((res) => {
+                assert_1.default.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an("object");
+                post.should.have.keys("_id", "img_url", "location", "username", "description", "lat", "long", "votes", "posted_at");
+                assert_1.default.equal(post._id, data._id);
+            });
+        });
+    });
+    it("400: returns bad request if the post_id is invalid", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get(`/api/posts/not_a_post`)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid id");
+        });
+    });
+    it("400: returns bad request if the post_id does not exist", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Post does not exist");
+        });
+    });
+});
+(0, mocha_1.describe)("GET /api/users/:username", () => {
     it("200: returns a user by username", () => {
         return (0, supertest_1.default)(app_1.default)
             .get("/api/users/Scott687")

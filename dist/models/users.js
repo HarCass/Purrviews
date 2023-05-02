@@ -10,9 +10,6 @@ const findUsers = () => {
 exports.findUsers = findUsers;
 const insertUser = (user) => {
     user.cats = [];
-    if (!user.username) {
-        return Promise.reject({ msg: "Invalid format", status: 400 });
-    }
     return collection.insertOne(user).then((data) => {
         return collection.findOne({ _id: new mongodb_1.ObjectId(data.insertedId) });
     });

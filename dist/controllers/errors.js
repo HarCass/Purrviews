@@ -16,18 +16,14 @@ const serverErrors = (err, req, res, next) => {
 };
 exports.serverErrors = serverErrors;
 const dbErrors = (err, req, res, next) => {
-    if (err.code) {
+    if (err.code === 11000) {
         res.status(400).send({ msg: 'Username already exists' });
+    }
+    else if (err.code === 121) {
+        res.status(400).send({ msg: 'Invalid format' });
     }
     else {
         next(err);
     }
 };
 exports.dbErrors = dbErrors;
-// export const dbErrors : ErrorRequestHandler = (err, req, res, next) => {
-//     if (err.code) {
-//         res.status(400).send({msg: 'Username already exists'})
-//     } else {
-//         next(err)
-//     }
-// }

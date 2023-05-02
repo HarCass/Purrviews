@@ -27,10 +27,10 @@ const expect = chai_1.default.expect;
             assert_1.default.equal(res.status, 200);
             const { users } = res.body;
             assert_1.default.equal(users.length > 0, true);
-            users.forEach(({ user }) => {
+            users.forEach((user) => {
                 should.exist(user);
                 user.should.be.an('object');
-                user.should.have.keys('user_id', 'avatar', 'description', 'username');
+                user.should.have.keys('_id', 'avatar', 'description', 'username', 'cats');
             });
         });
     });
@@ -43,10 +43,10 @@ const expect = chai_1.default.expect;
             assert_1.default.equal(res.status, 200);
             const { posts } = res.body;
             assert_1.default.equal(posts.length > 0, true);
-            posts.forEach(({ post }) => {
+            posts.forEach((post) => {
                 should.exist(post);
                 post.should.be.an('object');
-                post.should.have.keys('post_id', 'img_url', 'posted_at', 'location', 'votes', 'user_id', 'description', 'lat', 'long');
+                post.should.have.keys('_id', 'img_url', 'posted_at', 'location', 'votes', 'username', 'description', 'lat', 'long');
             });
         });
     });

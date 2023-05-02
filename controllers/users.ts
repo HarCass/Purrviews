@@ -15,11 +15,7 @@ export const getUserByUsername = (req: any, res: any, next: any) => {
     const { username } = req.params;
     return findUsersByUsername(username)
         .then((users) => {
-            if (users === null) {
-                return Promise.reject({ msg: "Username doesn't exist", status: 404 });
-            } else {
                 res.status(200).send({ users });
-            }
         })
         .catch(next);
 };

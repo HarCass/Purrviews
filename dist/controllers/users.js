@@ -17,12 +17,7 @@ const getUserByUsername = (req, res, next) => {
     const { username } = req.params;
     return (0, users_1.findUsersByUsername)(username)
         .then((users) => {
-        if (users === null) {
-            return Promise.reject({ msg: "Username doesn't exist", status: 404 });
-        }
-        else {
-            res.status(200).send({ users });
-        }
+        res.status(200).send({ users });
     })
         .catch(next);
 };

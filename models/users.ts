@@ -1,23 +1,28 @@
 import { ObjectId } from "mongodb";
 import { db } from "../db/connection";
 
-const collection = db.collection('users');
+const collection = db.collection("users");
 
 export const findUsers = () => {
     return collection.find({}).toArray();
-}
+};
 
 export const insertUser = (user: any) => {
-    user.cats = []
+    user.cats = [];
     if (!user.username) {
-        return Promise.reject({msg: "Invalid format", status: 400})
+        return Promise.reject({ msg: "Invalid format", status: 400 });
     }
-    return collection.insertOne(user)
-    .then((data) => {
-        return collection.findOne({_id: new ObjectId(data.insertedId)})
-    })
-}
+    return collection.insertOne(user).then((data) => {
+        return collection.findOne({ _id: new ObjectId(data.insertedId) });
+    });
+};
 
 export const findUsersByUsername = (username: any) => {
-    return collection.findOne({username: username});
-}
+    return collection.findOne({ username: username }).then((users) => {
+        if (users === null) {
+            return Promise.reject({ msg: "Username doesn't exist", status: 404 });
+        } else {
+            return users;
+        }
+    });
+};

@@ -234,3 +234,18 @@ const expect = chai_1.default.expect;
         });
     });
 });
+(0, mocha_1.describe)("DELETE /api/users/:username", () => {
+    it("204: Deletes a user by their username", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/users/Harry111")
+            .expect(204);
+    });
+    it("404: username not found", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/users/iamadog")
+            .expect(404)
+            .then(({ body }) => {
+            expect(body.msg).to.equal("Username doesn't exist");
+        });
+    });
+});

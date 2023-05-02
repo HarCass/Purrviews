@@ -4,7 +4,7 @@
   "description": "An app to discover local cats.",
   "main": "dsit/listen.js",
   "scripts": {
-    "test": "npm run build && npm run seed && mocha ./dist/test/",
+    "test": "npm run seed && mocha ./dist/test/",
     "build": "npx tsc",
     "seed": "npm run build && node ./dist/db/run-seed",
     "start": "node dist/listen.js",

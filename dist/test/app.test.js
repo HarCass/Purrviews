@@ -188,6 +188,30 @@ const expect = chai_1.default.expect;
         });
     });
 });
+(0, mocha_1.describe)('GET /api/users/:username/cats', () => {
+    it('200: returns an array of cat objects', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Scott687/cats')
+            .then(res => {
+            assert_1.default.equal(res.status, 200);
+            const { cats } = res.body;
+            assert_1.default.equal(cats.length > 0, true);
+            cats.forEach((cat) => {
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+            });
+        });
+    });
+    it('400: returns a bad request if username is invalid', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Steve123/cats')
+            .then(res => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
+});
 (0, mocha_1.describe)("GET /api/users/:username", () => {
     it("200: returns a user by username", () => {
         return (0, supertest_1.default)(app_1.default)

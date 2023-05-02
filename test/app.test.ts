@@ -221,6 +221,31 @@ describe("GET /api/posts/:post_id", () => {
     });
 });
 
+describe('GET /api/users/:username/cats', () => {
+    it('200: returns an array of cat objects', () => {
+        return request(app)
+        .get('/api/users/Scott687/cats')
+        .then(res => {
+            assert.equal(res.status, 200);
+            const {cats} = res.body;
+            assert.equal(cats.length > 0, true);
+            cats.forEach((cat: any) => {
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+            });
+        });
+    });
+    it('400: returns a bad request if username is invalid', () => {
+        return request(app)
+        .get('/api/users/Steve123/cats')
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Username does not exist");
+        });
+        });
+});
+
 describe("GET /api/users/:username", () => {
     it("200: returns a user by username", () => {
         return request(app)

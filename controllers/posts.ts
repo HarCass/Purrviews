@@ -20,3 +20,9 @@ export const getPostById: RequestHandler = (req, res, next) => {
     .then(post => res.status(200).send({post}))
     .catch(next);
 }
+
+export const patchPostById: RequestHandler = (req, res, next) => {
+    const {post_id} = req.params;
+    console.log(req.body);
+    return updatePostById()
+}

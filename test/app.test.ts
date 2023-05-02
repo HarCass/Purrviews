@@ -270,3 +270,38 @@ describe("GET /api/users/:username", () => {
             });
     });
 });
+
+describe('PATCH /api/posts/:post_id', () => {
+    it('200: updates the specififed posts votes and returns the new post', () => {
+        const newVotes = {
+            inc_votes: 1
+        }
+        return db
+        .collection("posts")
+        .findOne()
+        .then(data => {
+            return request(app)
+            .patch(`/api/posts/${data!._id}`)
+            .send(newVotes)
+            .then(res => {
+                assert.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys(
+                    "_id",
+                    "img_url",
+                    "location",
+                    "username",
+                    "description",
+                    "lat",
+                    "long",
+                    "votes",
+                    "posted_at"
+                );
+                assert.equal(post._id, data!._id);
+                assert.equal(post.votes, data!.votes + 1);
+            });
+        });
+    });
+});

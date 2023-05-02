@@ -234,3 +234,27 @@ const expect = chai_1.default.expect;
         });
     });
 });
+(0, mocha_1.describe)('PATCH /api/posts/:post_id', () => {
+    it('200: updates the specififed posts votes and returns the new post', () => {
+        const newVotes = {
+            inc_votes: 1
+        };
+        return connection_1.db
+            .collection("posts")
+            .findOne()
+            .then(data => {
+            return (0, supertest_1.default)(app_1.default)
+                .patch(`/api/posts/${data._id}`)
+                .send(newVotes)
+                .then(res => {
+                assert_1.default.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys("_id", "img_url", "location", "username", "description", "lat", "long", "votes", "posted_at");
+                assert_1.default.equal(post._id, data._id);
+                assert_1.default.equal(post.votes, data.votes + 1);
+            });
+        });
+    });
+});

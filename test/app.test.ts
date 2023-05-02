@@ -30,7 +30,6 @@ describe('GET /api/users', () => {
                 user.should.be.an('object');
                 user.should.have.keys('user_id', 'avatar', 'description', 'username');
             });
-                
         });
     });
 });
@@ -48,7 +47,6 @@ describe('GET /api/posts', () => {
                 post.should.be.an('object');
                 post.should.have.keys('post_id', 'img_url', 'posted_at', 'location', 'votes', 'user_id', 'description', 'lat', 'long');
             });
-                
         });
     });
 });

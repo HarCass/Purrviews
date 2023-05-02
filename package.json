@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm run build && mocha ./dist/test/",
     "build": "npx tsc",
+    "seed": "npm run build && node ./dist/db/seed",
     "start": "node dist/listen.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/listen.js\""
   },

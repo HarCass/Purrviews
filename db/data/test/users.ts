@@ -9,7 +9,7 @@ const users = [
         "username": "James456",
         "description": "Cats are life",
         "avatar": "https://cdn.shopify.com/s/files/1/0293/7680/6956/files/cat-caution-children-at-play-ments-ella-74-7827-star_480x480.jpg?v=1603733801",
-        "cat": [
+        "cats": [
             {
                 "cat_id": 1,
                 "cat_name": "Mittens",
@@ -28,7 +28,7 @@ const users = [
         "username": "Scott687",
         "description": "Cattu in a socku",
         "avatar": "https://i2-prod.dailystar.co.uk/incoming/article20472638.ece/ALTERNATES/s1227b/httpscdnimagesdailystarcoukdynamic122photos791000900x738434791",
-        "cat": [
+        "cats": [
             {
                 "cat_id": 1,
                 "cat_name": "Fluffy",
@@ -61,7 +61,7 @@ const users = [
         "username": "Ellie123",
         "description": "Super cool cat lover",
         "avatar": "https://i.pinimg.com/736x/a7/9a/f3/a79af309957138af9ef7696b261b71fe.jp…",
-        "cat": [
+        "cats": [
           {
             "cat_id": 1,
             "cat_name": "Whiskers",
@@ -80,7 +80,7 @@ const users = [
         "avatar": "https://files.slack.com/files-tmb/T01KPE0QGCD-F055BAS05B7-0b1afbdc12/image_360.png",
         "description": "I like bald cats",
         "username": "Eeeeeee18",
-        "cat": [
+        "cats": [
           {
             "cat_id": 1,
             "cat_name": "Smokey",

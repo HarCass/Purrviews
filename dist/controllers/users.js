@@ -17,6 +17,7 @@ exports.postUser = postUser;
 const getUserCats = (req, res, next) => {
     const { username } = req.params;
     return (0, users_1.findUserCats)(username)
-        .then(cats => res.status(200).send({ cats }));
+        .then(cats => res.status(200).send({ cats }))
+        .catch(next);
 };
 exports.getUserCats = getUserCats;

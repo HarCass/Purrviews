@@ -25,5 +25,10 @@ export const findUserCats = (username: string) => {
     };
 
     return collection.findOne(filter, {projection})
-    .then(data => data!.cats);
+    .then(data => {
+        if (!data) {
+            return Promise.reject({status: 400, msg: "Username does not exist"})
+        }
+        return data.cats;
+    });
 }

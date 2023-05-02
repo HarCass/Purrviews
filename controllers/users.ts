@@ -16,5 +16,6 @@ export const postUser: RequestHandler = (req, res, next) => {
 export const getUserCats: RequestHandler = (req, res, next) => {
     const {username} = req.params;
     return findUserCats(username)
-    .then(cats => res.status(200).send({cats}));
+    .then(cats => res.status(200).send({cats}))
+    .catch(next);
 }

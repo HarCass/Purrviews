@@ -201,4 +201,12 @@ const expect = chai_1.default.expect;
             });
         });
     });
+    it('400: returns a bad request if username is invalid', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Steve123/cats')
+            .then(res => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
 });

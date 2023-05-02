@@ -201,5 +201,12 @@ describe('GET /api/users/:username/cats', () => {
             });
         });
     });
-    it('400: returns a bad request ')
+    it('400: returns a bad request if username is invalid', () => {
+        return request(app)
+        .get('/api/users/Steve123/cats')
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Username does not exist");
+        });
+    })
 });

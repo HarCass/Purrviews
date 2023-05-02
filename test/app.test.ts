@@ -67,8 +67,8 @@ describe('POST /api/users', () => {
             should.exist(user);
             user.should.be.an('object');
             user.should.have.keys('_id', 'cats', 'avatar', 'description', 'username');
-        })
-    })
+        });
+    });
     it('400: returns a bad request if data format is wrong', () => {
         const testUser = {
             description: "Super cool cat lover",
@@ -79,8 +79,8 @@ describe('POST /api/users', () => {
         .then(res => {
             assert.equal(res.status, 400);
             assert.equal(res.body.msg, "Invalid format");
-        })
-    })
+        });
+    });
     it('400: returns a bad request if username already exists', () => {
         const testUser = {
             username: "Steve1",
@@ -165,16 +165,17 @@ describe('GET /api/posts/:post_id', () => {
                 post.should.be.an('object');
                 post.should.have.keys('_id', 'img_url', 'location', 'username', 'description', 'lat', 'long', 'votes', 'posted_at');
                 assert.equal(post._id, data!._id)
-            });})
-    })
-    it('400: returns bad request if the post_id is invalid', () => {
-            return request(app)
-            .get(`/api/posts/not_a_post`)
-            .then(res => {
-                assert.equal(res.status, 400);
-                assert.equal(res.body.msg, "Invalid id");
             });
-    })
+        });
+    });
+    it('400: returns bad request if the post_id is invalid', () => {
+        return request(app)
+        .get(`/api/posts/not_a_post`)
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid id");
+        });
+    });
     it('400: returns bad request if the post_id does not exist', () => {
         return request(app)
         .get(`/api/posts/${new ObjectId}`)
@@ -182,5 +183,23 @@ describe('GET /api/posts/:post_id', () => {
             assert.equal(res.status, 400);
             assert.equal(res.body.msg, "Post does not exist");
         });
-})
+    });
+});
+
+describe('GET /api/users/:username/cats', () => {
+    it('200: returns an array of cat objects', () => {
+        return request(app)
+        .get('/api/users/Scott687/cats')
+        .then(res => {
+            assert.equal(res.status, 200);
+            const {cats} = res.body;
+            assert.equal(cats.length > 0, true);
+            cats.forEach((cat: any) => {
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+            });
+        });
+    });
+    it('400: returns a bad request ')
 });

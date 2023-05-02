@@ -8,4 +8,5 @@ const users_1 = require("../controllers/users");
 const usersRouter = express_1.default.Router();
 usersRouter.get('/', users_1.getUsers);
 usersRouter.post('/', users_1.postUser);
+usersRouter.get('/:username/cats', users_1.getUserCats);
 exports.default = usersRouter;

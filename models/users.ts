@@ -14,3 +14,16 @@ export const insertUser = (user: any) => {
         return collection.findOne({_id: new ObjectId(data.insertedId)})
     })
 }
+
+export const findUserCats = (username: string) => {
+    const filter = {
+        'username': username
+    };
+
+    const projection = {
+        'cats': 1
+    };
+
+    return collection.findOne(filter, {projection})
+    .then(data => data!.cats);
+}

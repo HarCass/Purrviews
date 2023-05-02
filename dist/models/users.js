@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertUser = exports.findUsers = void 0;
+exports.findUserCats = exports.insertUser = exports.findUsers = void 0;
 const mongodb_1 = require("mongodb");
 const connection_1 = require("../db/connection");
 const collection = connection_1.db.collection('users');
@@ -16,3 +16,14 @@ const insertUser = (user) => {
     });
 };
 exports.insertUser = insertUser;
+const findUserCats = (username) => {
+    const filter = {
+        'username': username
+    };
+    const projection = {
+        'cats': 1
+    };
+    return collection.findOne(filter, { projection })
+        .then(data => data.cats);
+};
+exports.findUserCats = findUserCats;

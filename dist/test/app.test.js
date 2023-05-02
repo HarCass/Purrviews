@@ -186,3 +186,19 @@ const expect = chai_1.default.expect;
         });
     });
 });
+(0, mocha_1.describe)('GET /api/users/:username/cats', () => {
+    it('200: returns an array of cat objects', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Scott687/cats')
+            .then(res => {
+            assert_1.default.equal(res.status, 200);
+            const { cats } = res.body;
+            assert_1.default.equal(cats.length > 0, true);
+            cats.forEach((cat) => {
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+            });
+        });
+    });
+});

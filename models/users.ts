@@ -21,28 +21,36 @@ export const findUsersByUsername = (username: any) => {
         } else {
             return users;
         }
-
     });
 };
 
+export const removeUser = (username: any) => {
+    return collection.deleteOne({ username: username }).then((users) => {
+        if (users.deletedCount === 0) {
+            return Promise.reject({ msg: "Username doesn't exist", status: 404 });
+        } else {
+            return users;
+        }
+    });
+};
 
 export const findUserCats = (username: string) => {
     const filter = {
-        'username': username
+        username: username,
     };
 
     const projection = {
-        'cats': 1
+        cats: 1,
     };
 
-    return collection.findOne(filter, {projection})
-    .then(data => {
+    return collection.findOne(filter, { projection }).then((data) => {
         if (!data) {
-            return Promise.reject({status: 400, msg: "Username does not exist"})
+            return Promise.reject({ status: 400, msg: "Username does not exist" });
         }
         return data.cats;
     });
-}
+};
+
 
 export const findUserCatById = (username: string, cat_id: number) => {
     const filter = {

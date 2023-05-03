@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPostById = exports.postPost = exports.getPosts = void 0;
+<<<<<<< HEAD
+exports.deletePostById = exports.getPostById = exports.postPost = exports.getPosts = void 0;
+=======
+exports.patchPostById = exports.getPostById = exports.postPost = exports.getPosts = void 0;
+>>>>>>> main
 const posts_1 = require("../models/posts");
 const getPosts = (req, res, next) => {
     return (0, posts_1.findPosts)()
@@ -22,3 +26,23 @@ const getPostById = (req, res, next) => {
         .catch(next);
 };
 exports.getPostById = getPostById;
+<<<<<<< HEAD
+const deletePostById = (req, res, next) => {
+    const { post_id } = req.params;
+    return (0, posts_1.deletePost)(post_id)
+        .then(() => {
+        res.sendStatus(204);
+    })
+        .catch(next);
+};
+exports.deletePostById = deletePostById;
+=======
+const patchPostById = (req, res, next) => {
+    const { post_id } = req.params;
+    const { inc_votes } = req.body;
+    return (0, posts_1.updatePostById)(post_id, inc_votes)
+        .then(post => res.status(200).send({ post }))
+        .catch(next);
+};
+exports.patchPostById = patchPostById;
+>>>>>>> main

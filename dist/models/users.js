@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 exports.findUserCatById = exports.findUserCats = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
+=======
+exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
+>>>>>>> main
 const mongodb_1 = require("mongodb");
 const connection_1 = require("../db/connection");
 const collection = connection_1.db.collection("users");
@@ -26,15 +30,25 @@ const findUsersByUsername = (username) => {
     });
 };
 exports.findUsersByUsername = findUsersByUsername;
+const removeUser = (username) => {
+    return collection.deleteOne({ username: username }).then((users) => {
+        if (users.deletedCount === 0) {
+            return Promise.reject({ msg: "Username doesn't exist", status: 404 });
+        }
+        else {
+            return users;
+        }
+    });
+};
+exports.removeUser = removeUser;
 const findUserCats = (username) => {
     const filter = {
-        'username': username
+        username: username,
     };
     const projection = {
-        'cats': 1
+        cats: 1,
     };
-    return collection.findOne(filter, { projection })
-        .then(data => {
+    return collection.findOne(filter, { projection }).then((data) => {
         if (!data) {
             return Promise.reject({ status: 400, msg: "Username does not exist" });
         }

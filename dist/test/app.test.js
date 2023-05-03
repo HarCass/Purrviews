@@ -234,6 +234,7 @@ const expect = chai_1.default.expect;
         });
     });
 });
+<<<<<<< HEAD
 (0, mocha_1.describe)('GET /api/users/:username/:cat_id', () => {
     it('200: returns a cat object', () => {
         return (0, supertest_1.default)(app_1.default)
@@ -268,6 +269,121 @@ const expect = chai_1.default.expect;
             .get("/api/users/Scott687/999")
             .then((res) => {
             assert_1.default.equal(res.status, 404), assert_1.default.equal(res.body.msg, "Cat does not exist");
+=======
+(0, mocha_1.describe)('PATCH /api/posts/:post_id', () => {
+    it('200: updates the specififed posts votes and returns the new post', () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return connection_1.db
+            .collection("posts")
+            .findOne()
+            .then(data => {
+            return (0, supertest_1.default)(app_1.default)
+                .patch(`/api/posts/${data._id}`)
+                .send(newVotes)
+                .then(res => {
+                assert_1.default.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys("_id", "img_url", "location", "username", "description", "lat", "long", "votes", "posted_at");
+                assert_1.default.equal(post._id, data._id);
+                assert_1.default.equal(post.votes, data.votes - 1);
+            });
+        });
+    });
+    it("400: returns bad request if the post_id is invalid", () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/not_a_post`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid id");
+        });
+    });
+    it("400: returns bad request if the post_id does not exist", () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Post does not exist");
+        });
+    });
+    it("400: returns bad request if inc_votes does not exist on request", () => {
+        const newVotes = {};
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it("400: returns bad request if the inc_votes value is not a number", () => {
+        const newVotes = {
+            inc_votes: 'not_a_number'
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+});
+(0, mocha_1.describe)("DELETE /api/users/:username", () => {
+    it("204: Deletes a user by their username", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/users/Harry111")
+            .expect(204);
+    });
+    it("404: username not found", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/users/iamadog")
+            .expect(404)
+            .then(({ body }) => {
+            expect(body.msg).to.equal("Username doesn't exist");
+        });
+    });
+});
+mocha_1.describe.only("DELETE /api/posts/:post_id", () => {
+    it("204: Deletes a post by its post_id", () => {
+        return connection_1.db
+            .collection("posts")
+            .findOne()
+            .then((data) => {
+            return (0, supertest_1.default)(app_1.default)
+                .delete(`/api/posts/${data._id}`)
+                .expect(204);
+        });
+    });
+    it("404: Post not found", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/posts/645137bef81a9c03007ca79d")
+            .expect(404)
+            .then(({ body }) => {
+            expect(body.msg).to.equal("Post doesn't exist");
+        });
+    });
+    it("400: Invalid Post Id", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/posts/645137bef8")
+            .expect(400)
+            .then(({ body }) => {
+            const invalidId = '645137bef8';
+            const isValidId = mongodb_1.ObjectId.isValid(invalidId);
+            assert_1.default.strictEqual(isValidId, false);
+            expect(body.msg).to.equal("Invalid Post Id");
+>>>>>>> main
         });
     });
 });

@@ -1,13 +1,15 @@
 import express from "express";
-import { getUsers, postUser, getUserByUsername, getUserCats, getCatById } from "../controllers/users";
+import { getUsers, postUser, getUserByUsername, getUserCats, deleteUser, getCatById } from "../controllers/users";
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', getUsers);
+usersRouter.get("/", getUsers);
 
-usersRouter.post('/', postUser);
+usersRouter.post("/", postUser);
 
-usersRouter.get('/:username', getUserByUsername);
+usersRouter.get("/:username", getUserByUsername);
+
+usersRouter.delete("/:username", deleteUser);
 
 usersRouter.get('/:username/cats', getUserCats);
 

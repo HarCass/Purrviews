@@ -1,4 +1,4 @@
-import { findPosts, insertPost, checkUsernameExists, findPostById } from "../models/posts"
+import { findPosts, insertPost, checkUsernameExists, findPostById, deletePost, updatePostById } from "../models/posts"
 import { RequestHandler } from "express";
 
 export const getPosts: RequestHandler = (req, res, next) => {
@@ -17,6 +17,23 @@ export const postPost: RequestHandler = (req, res, next) => {
 export const getPostById: RequestHandler = (req, res, next) => {
     const {post_id} = req.params;
     return findPostById(post_id)
+    .then(post => res.status(200).send({post}))
+    .catch(next);
+}
+
+export const deletePostById: RequestHandler = (req, res, next) => {
+        const { post_id } = req.params;
+        return deletePost(post_id)
+        .then(() => {
+            res.sendStatus(204);
+        })
+        .catch(next)
+    };
+    
+export const patchPostById: RequestHandler = (req, res, next) => {
+    const {post_id} = req.params;
+    const {inc_votes} = req.body;
+    return updatePostById(post_id, inc_votes)
     .then(post => res.status(200).send({post}))
     .catch(next);
 }

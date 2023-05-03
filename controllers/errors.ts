@@ -18,6 +18,8 @@ export const dbErrors : ErrorRequestHandler = (err, req, res, next) => {
         res.status(400).send({msg: 'Username already exists'});
     } else if (err.code === 121) {
         res.status(400).send({msg: 'Invalid format'});
+    } else if (err.code === 14) {
+        res.status(400).send({msg: 'Invalid format'});
     } else {
         next(err);
     }

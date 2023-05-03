@@ -35,11 +35,25 @@ export const findPostById = (id: string) => {
     })
 }
 
+export const deletePost = (post: string) => {
+    const isValidId = ObjectId.isValid(post)
+    if(isValidId === false){
+         return Promise.reject({ msg: "Invalid Post Id", status: 400 })
+    }
+    return collection.deleteOne({ _id: new ObjectId(post) }).then((post) => {
+        if (post.deletedCount === 0) {
+            return Promise.reject({ msg: "Post doesn't exist", status: 404 });
+        } else {
+            return post;
+        }
+    })
+};
+
 export const updatePostById = (id: string, incVotes: number) => {
-    if (!ObjectId.isValid(id)) return Promise.reject({status: 400, msg:"Invalid id"});
-    return collection.findOneAndUpdate({_id: new ObjectId(id)}, {$inc: {'votes': incVotes}}, {returnDocument : 'after'})
-    .then(({value}) => {
-        if (!value) return Promise.reject({status:400, msg: 'Post does not exist'})
+     if (!ObjectId.isValid(id)) return Promise.reject({status: 400, msg:"Invalid id"});
+     return collection.findOneAndUpdate({_id: new ObjectId(id)}, {$inc: {'votes': incVotes}}, {returnDocument : 'after'})
+     .then(({value}) => {
+       if (!value) return Promise.reject({status:400, msg: 'Post does not exist'})
         return value;
-    });
-}
+ })
+};

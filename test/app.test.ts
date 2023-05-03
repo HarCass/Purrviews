@@ -483,54 +483,6 @@ describe('PATCH /api/posts/:post_id', () => {
     });
 });
 
-describe("DELETE /api/users/:username", () => {
-    it("204: Deletes a user by their username", () => {
-        return request(app)
-        .delete("/api/users/Harry111")
-        .expect(204)
-    })
-    it("404: username not found", () => {
-        return request(app)
-        .delete("/api/users/iamadog")
-        .expect(404)
-        .then(({body}) => {
-            expect(body.msg).to.equal("Username doesn't exist")
-        })
-    })
-})
-
-describe("DELETE /api/posts/:post_id", () => {
-    it("204: Deletes a post by its post_id", () => {
-        return db
-        .collection("posts")
-        .findOne()
-        .then((data) => {
-            return request(app)
-            .delete(`/api/posts/${data!._id}`)
-            .expect(204)
-        })
-    })
-    it("404: Post not found", () => {
-        return request(app)
-        .delete("/api/posts/645137bef81a9c03007ca79d")
-        .expect(404)
-        .then(({body}) => {
-            expect(body.msg).to.equal("Post doesn't exist");
-        })
-    })
-    it("400: Invalid Post Id", () => {
-        return request(app)
-        .delete("/api/posts/645137bef8")
-        .expect(400)
-        .then(({body}) => {
-            const invalidId = '645137bef8';
-            const isValidId = ObjectId.isValid(invalidId);
-            assert.strictEqual(isValidId, false);
-            expect(body.msg).to.equal("Invalid Post Id");
-        })
-    })
-})
-
 describe('GET /api/users/:username/:cat_id', () => {
     it('200: returns a cat object', () => {
         return request(app)

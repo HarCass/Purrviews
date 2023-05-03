@@ -1,10 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
-exports.findUserCatById = exports.findUserCats = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
-=======
-exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
->>>>>>> main
+exports.findUserCatById = exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
 const mongodb_1 = require("mongodb");
 const connection_1 = require("../db/connection");
 const collection = connection_1.db.collection("users");

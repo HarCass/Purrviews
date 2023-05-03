@@ -1,4 +1,4 @@
-import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats, findUserCatById, removeCatById, updateCatById } from "../models/users";
+import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats, findUserCatById, removeCatById, updateCatById, postedCat } from "../models/users";
 import { checkUsernameExists } from "../models/posts";
 import { RequestHandler } from "express";
 
@@ -62,3 +62,10 @@ export const patchCatById: RequestHandler = (req, res, next) => {
     .then(cat => res.status(200).send({cat}))
     .catch(next);
 }
+export const postUserCats: RequestHandler = (req, res, next) => {
+    const { username } = req.params;
+    const data = req.body;
+    return postedCat(data, username)
+        .then((cat) => res.status(201).send({ cat }))
+        .catch(next);
+};

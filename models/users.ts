@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, ReturnDocument } from "mongodb";
 import { db } from "../db/connection";
 
 const collection = db.collection("users");
@@ -51,6 +51,25 @@ export const findUserCats = (username: string) => {
     });
 };
 
+export const postedCat = (newCat: any, username: string) => {
+    return findUserCats(username)
+    .then((allCats) => {
+       let highestCatId = 0;
+
+       for(const cat of allCats){
+        if(cat.cat_id > highestCatId){
+            highestCatId = cat.cat_id
+        }
+       }
+
+       const newCatId = highestCatId + 1;
+       newCat.cat_id = newCatId;
+    })
+    .then(() => {
+        return collection.findOneAndUpdate({username: username}, {$push:{cats: newCat }}, {returnDocument: "after"})
+    })
+    .then(({value}) => { return value!.cats[value!.cats.length - 1]})
+}
 
 export const findUserCatById = (username: string, cat_id: number) => {
     const filter = {

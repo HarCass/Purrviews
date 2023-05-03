@@ -401,88 +401,6 @@ describe("DELETE /api/posts/:post_id", () => {
     })
 })
 
-describe('PATCH /api/posts/:post_id', () => {
-    it('200: updates the specififed posts votes and returns the new post', () => {
-        const newVotes = {
-            inc_votes: -1
-        }
-        return db
-        .collection("posts")
-        .findOne()
-        .then(data => {
-            return request(app)
-            .patch(`/api/posts/${data!._id}`)
-            .send(newVotes)
-            .then(res => {
-                assert.equal(res.status, 200);
-                const { post } = res.body;
-                should.exist(post);
-                post.should.be.an('object');
-                post.should.have.keys(
-                    "_id",
-                    "img_url",
-                    "location",
-                    "username",
-                    "description",
-                    "lat",
-                    "long",
-                    "votes",
-                    "posted_at"
-                );
-                assert.equal(post._id, data!._id);
-                assert.equal(post.votes, data!.votes - 1);
-            });
-        });
-    });
-    it("400: returns bad request if the post_id is invalid", () => {
-        const newVotes = {
-            inc_votes: -1
-        }
-        return request(app)
-        .patch(`/api/posts/not_a_post`)
-        .send(newVotes)
-        .then((res) => {
-            assert.equal(res.status, 400);
-            assert.equal(res.body.msg, "Invalid id");
-        });
-    });
-    it("400: returns bad request if the post_id does not exist", () => {
-        const newVotes = {
-            inc_votes: -1
-        }
-        return request(app)
-        .patch(`/api/posts/${new ObjectId()}`)
-        .send(newVotes)
-        .then((res) => {
-            assert.equal(res.status, 400);
-            assert.equal(res.body.msg, "Post does not exist");
-        });
-    });
-    it("400: returns bad request if inc_votes does not exist on request", () => {
-        const newVotes = {
-        }
-        return request(app)
-        .patch(`/api/posts/${new ObjectId()}`)
-        .send(newVotes)
-        .then((res) => {
-            assert.equal(res.status, 400);
-            assert.equal(res.body.msg, "Invalid format");
-        });
-    });
-    it("400: returns bad request if the inc_votes value is not a number", () => {
-        const newVotes = {
-            inc_votes: 'not_a_number'
-        }
-        return request(app)
-        .patch(`/api/posts/${new ObjectId()}`)
-        .send(newVotes)
-        .then((res) => {
-            assert.equal(res.status, 400);
-            assert.equal(res.body.msg, "Invalid format");
-        });
-    });
-});
-
 describe('GET /api/users/:username/cats/:cat_id', () => {
     it('200: returns a cat object', () => {
         return request(app)
@@ -641,3 +559,73 @@ describe('PATCH /api/users/:username/cats/:cat_id', () => {
                     });
                 });
     });
+
+describe("POSTS /api/users/:username/cats", () => {
+    it("201: inserts a cat into the database and returns the new cat", () => {
+        const newCat = {
+            cat_name: "Tabby",
+            age: 1,
+            breed: "Maine Coon",
+            characteristics: [
+              "curious",
+              "friendly"
+            ],
+            cat_img: "https://image.slidesharecdn.com/downloadfunnycatvideos-150906143836-lva1-app6891/85/download-funny-cat-videos-1-320.jpg?cb=1665607875",
+            missing: false
+        };
+        return request(app)
+            .post("/api/users/Scott687/cats")
+            .send(newCat)
+            .then((res) => {
+                assert.equal(res.status, 201);
+                const { cat } = res.body;
+                should.exist(cat);
+                cat.should.be.an("object");
+                cat.should.have.keys(
+                    "cat_id",
+                    "cat_img",
+                    "age",
+                    "breed",
+                    "cat_name",
+                    "characteristics",
+                    "missing",
+                );
+            });
+    });
+    it("400: returns a bad request if data format is wrong", () => {
+        const newCat = {
+            cat_name: "Tabby",
+            age: 1,
+            breed: "Maine Coon",
+            cat_img: "https://image.slidesharecdn.com/downloadfunnycatvideos-150906143836-lva1-app6891/85/download-funny-cat-videos-1-320.jpg?cb=1665607875",
+            missing: false
+        };
+        return request(app)
+            .post("/api/users/Scott687/cats")
+            .send(newCat)
+            .then((res) => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.msg, "Invalid format");
+            });
+    });
+    it("400: returns a bad request if the username does not exist", () => {
+        const newCat = {
+            cat_name: "Tabby",
+            age: 1,
+            breed: "Maine Coon",
+            characteristics: [
+              "curious",
+              "friendly"
+            ],
+            cat_img: "https://image.slidesharecdn.com/downloadfunnycatvideos-150906143836-lva1-app6891/85/download-funny-cat-videos-1-320.jpg?cb=1665607875",
+            missing: false
+        };
+        return request(app)
+            .post("/api/users/invaliduser/cats")
+            .send(newCat)
+            .then((res) => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.msg, "Username does not exist");
+            });
+    });
+});

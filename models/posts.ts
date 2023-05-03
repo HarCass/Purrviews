@@ -3,11 +3,22 @@ import { ObjectId } from 'mongodb';
 
 const collection = db.collection('posts');
 
+interface postType {
+    img_url: string,
+    location: string,
+    username: string,
+    description: string,
+    lat: number,
+    long: number
+    votes: number,
+    posted_at: string
+}
+
 export const findPosts = () => {
     return collection.find({}).toArray();
 }
 
-export const insertPost = (post: any) => {
+export const insertPost = (post: postType) => {
     post.votes = 0;
     post.posted_at = new Date().toISOString();
     return collection.insertOne(post)

@@ -1,5 +1,10 @@
 import app from "./app";
+import dotenv from "dotenv";
 
-app.listen(9090, () => {
-    console.log('Server running on 9090...');
+dotenv.config();
+
+const port = process.env.PORT;
+
+app.listen(port, () => {
+    console.log(`Server running on ${port}...`);
 });

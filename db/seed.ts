@@ -1,6 +1,11 @@
 import { db } from "./connection";
 
-const seed = (data: any) => {
+interface seedType {
+   users: object[],
+   posts: object[],
+}
+
+const seed = (data: seedType) => {
     return db.dropCollection('users')
     .then(() => db.dropCollection('posts'))
     .then(() => db.createCollection('users', {

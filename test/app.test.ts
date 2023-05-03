@@ -401,7 +401,7 @@ describe("DELETE /api/posts/:post_id", () => {
     })
 })
 
-describe.only("POSTS /api/users/:username/cats", () => {
+describe("POSTS /api/users/:username/cats", () => {
     it("201: inserts a cat into the database and returns the new cat", () => {
         const newCat = {
             cat_name: "Tabby",

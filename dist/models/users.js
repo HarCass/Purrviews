@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeCatById = exports.findUserCatById = exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
+exports.updateCatById = exports.removeCatById = exports.findUserCatById = exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
 const mongodb_1 = require("mongodb");
 const connection_1 = require("../db/connection");
 const collection = connection_1.db.collection("users");
@@ -83,3 +83,19 @@ const removeCatById = (username, id) => {
     });
 };
 exports.removeCatById = removeCatById;
+const updateCatById = (username, cat_id, missing) => {
+    const query = { username: username, 'cats.cat_id': cat_id };
+    const updateDocument = {
+        $set: { "cats.$.missing": missing }
+    };
+    if (isNaN(cat_id))
+        return Promise.reject({ status: 400, msg: "Invalid cat_id" });
+    return collection.findOneAndUpdate(query, updateDocument, { returnDocument: 'after' })
+        .then(({ value }) => {
+        if (!value) {
+            return Promise.reject({ status: 404, msg: "Cat does not exist" });
+        }
+        return value.cats.filter((cat) => cat.cat_id === cat_id)[0];
+    });
+};
+exports.updateCatById = updateCatById;

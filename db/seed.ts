@@ -24,7 +24,14 @@ const seed = (data: any) => {
                  },
                  cats: {
                     bsonType: "array",
-                    description: "'cats' must be an array"
+                    description: "'cats' must be an array",
+                    items: {
+                     bsonType: "object",
+                     properties: 
+                     {missing: 
+                        {bsonType: "bool",
+                     description: "missing must be true or false"}
+                  }}
                  }
               }
            }

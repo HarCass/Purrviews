@@ -1,4 +1,4 @@
-import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats } from "../models/users";
+import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats, findUserCatById } from "../models/users";
 import { RequestHandler } from "express";
 
 export const getUsers: RequestHandler = (req, res, next) => {
@@ -36,3 +36,11 @@ export const getUserCats: RequestHandler = (req, res, next) => {
         .then((cats) => res.status(200).send({ cats }))
         .catch(next);
 };
+
+
+export const getCatById: RequestHandler = (req, res, next) => {
+    const {username, cat_id} = req.params;
+    return findUserCatById(username, Number(cat_id))
+    .then(cat => res.status(200).send({cat}))
+    .catch(next);
+}

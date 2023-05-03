@@ -319,7 +319,7 @@ const expect = chai_1.default.expect;
         });
     });
 });
-mocha_1.describe.only("DELETE /api/posts/:post_id", () => {
+(0, mocha_1.describe)("DELETE /api/posts/:post_id", () => {
     it("204: Deletes a post by its post_id", () => {
         return connection_1.db
             .collection("posts")
@@ -347,6 +347,113 @@ mocha_1.describe.only("DELETE /api/posts/:post_id", () => {
             const isValidId = mongodb_1.ObjectId.isValid(invalidId);
             assert_1.default.strictEqual(isValidId, false);
             expect(body.msg).to.equal("Invalid Post Id");
+        });
+    });
+});
+(0, mocha_1.describe)('PATCH /api/posts/:post_id', () => {
+    it('200: updates the specififed posts votes and returns the new post', () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return connection_1.db
+            .collection("posts")
+            .findOne()
+            .then(data => {
+            return (0, supertest_1.default)(app_1.default)
+                .patch(`/api/posts/${data._id}`)
+                .send(newVotes)
+                .then(res => {
+                assert_1.default.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys("_id", "img_url", "location", "username", "description", "lat", "long", "votes", "posted_at");
+                assert_1.default.equal(post._id, data._id);
+                assert_1.default.equal(post.votes, data.votes - 1);
+            });
+        });
+    });
+    it("400: returns bad request if the post_id is invalid", () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/not_a_post`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid id");
+        });
+    });
+    it("400: returns bad request if the post_id does not exist", () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Post does not exist");
+        });
+    });
+    it("400: returns bad request if inc_votes does not exist on request", () => {
+        const newVotes = {};
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it("400: returns bad request if the inc_votes value is not a number", () => {
+        const newVotes = {
+            inc_votes: 'not_a_number'
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+});
+(0, mocha_1.describe)('GET /api/users/:username/:cat_id', () => {
+    it('200: returns a cat object', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Scott687/1')
+            .then(res => {
+            assert_1.default.equal(res.status, 200);
+            const { cat } = res.body;
+            assert_1.default.equal(cat.cat_id, 1);
+            should.exist(cat);
+            cat.should.be.an('object');
+            cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+        });
+    });
+    it('404: returns a bad request if username is invalid', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Steve123/1')
+            .then(res => {
+            assert_1.default.equal(res.status, 404);
+            assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
+    it('400: returns a bad request if cat_id is invalid', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Scott687/not_an_id')
+            .then(res => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid cat_id");
+        });
+    });
+    it("404: returns a status 404 and a message if cat_id doesnt exist", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get("/api/users/Scott687/999")
+            .then((res) => {
+            assert_1.default.equal(res.status, 404), assert_1.default.equal(res.body.msg, "Cat does not exist");
         });
     });
 });

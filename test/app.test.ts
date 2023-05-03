@@ -369,7 +369,7 @@ describe("DELETE /api/users/:username", () => {
     })
 })
 
-describe.only("DELETE /api/posts/:post_id", () => {
+describe("DELETE /api/posts/:post_id", () => {
     it("204: Deletes a post by its post_id", () => {
         return db
         .collection("posts")
@@ -400,3 +400,123 @@ describe.only("DELETE /api/posts/:post_id", () => {
         })
     })
 })
+
+describe('PATCH /api/posts/:post_id', () => {
+    it('200: updates the specififed posts votes and returns the new post', () => {
+        const newVotes = {
+            inc_votes: -1
+        }
+        return db
+        .collection("posts")
+        .findOne()
+        .then(data => {
+            return request(app)
+            .patch(`/api/posts/${data!._id}`)
+            .send(newVotes)
+            .then(res => {
+                assert.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys(
+                    "_id",
+                    "img_url",
+                    "location",
+                    "username",
+                    "description",
+                    "lat",
+                    "long",
+                    "votes",
+                    "posted_at"
+                );
+                assert.equal(post._id, data!._id);
+                assert.equal(post.votes, data!.votes - 1);
+            });
+        });
+    });
+    it("400: returns bad request if the post_id is invalid", () => {
+        const newVotes = {
+            inc_votes: -1
+        }
+        return request(app)
+        .patch(`/api/posts/not_a_post`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid id");
+        });
+    });
+    it("400: returns bad request if the post_id does not exist", () => {
+        const newVotes = {
+            inc_votes: -1
+        }
+        return request(app)
+        .patch(`/api/posts/${new ObjectId()}`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Post does not exist");
+        });
+    });
+    it("400: returns bad request if inc_votes does not exist on request", () => {
+        const newVotes = {
+        }
+        return request(app)
+        .patch(`/api/posts/${new ObjectId()}`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it("400: returns bad request if the inc_votes value is not a number", () => {
+        const newVotes = {
+            inc_votes: 'not_a_number'
+        }
+        return request(app)
+        .patch(`/api/posts/${new ObjectId()}`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid format");
+        });
+    });
+});
+
+describe('GET /api/users/:username/:cat_id', () => {
+    it('200: returns a cat object', () => {
+        return request(app)
+        .get('/api/users/Scott687/1')
+        .then(res => {
+            assert.equal(res.status, 200);
+            const {cat} = res.body;
+            assert.equal(cat.cat_id, 1);
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+        });
+    });
+    it('404: returns a bad request if username is invalid', () => {
+        return request(app)
+        .get('/api/users/Steve123/1')
+        .then(res => {
+            assert.equal(res.status, 404);
+            assert.equal(res.body.msg, "Username does not exist");
+        });
+    });
+    it('400: returns a bad request if cat_id is invalid', () => {
+        return request(app)
+        .get('/api/users/Scott687/not_an_id')
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid cat_id");
+        });
+    });
+    it("404: returns a status 404 and a message if cat_id doesnt exist", () => {
+        return request(app)
+            .get("/api/users/Scott687/999")
+            .then((res) => {
+                assert.equal(res.status, 404), assert.equal(res.body.msg, "Cat does not exist");
+            });
+    });
+});

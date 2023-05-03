@@ -3,13 +3,6 @@ import { db } from "../db/connection";
 
 const collection = db.collection("users");
 
-interface userType {
-    username: string,
-    description: string,
-    avatar: string,
-    cats: object[]
-}
-
 interface catType {
     cat_name: string,
     age: number,
@@ -18,6 +11,13 @@ interface catType {
     cat_img: string,
     missing: boolean,
     cat_id: number
+}
+
+interface userType {
+    username: string,
+    description: string,
+    avatar: string,
+    cats: catType[]
 }
 
 export const findUsers = () => {

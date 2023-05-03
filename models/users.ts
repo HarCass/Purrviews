@@ -43,3 +43,26 @@ export const findUserCats = (username: string) => {
         return data.cats;
     });
 }
+
+export const findUserCatById = (username: string, cat_id: number) => {
+    const filter = {
+        'username': username
+    }
+
+    const projection = {
+        'cats': {'$elemMatch': {'cat_id': cat_id}}
+    }
+
+    if (isNaN(cat_id)) return Promise.reject({status: 400, msg: "Invalid cat_id"})
+
+    return collection.findOne(filter, {projection})
+    .then(data => {
+        if (!data) {
+            return Promise.reject({status: 404, msg: "Username does not exist"})
+        }
+        if (!data.cats) {
+            return Promise.reject({status: 404, msg: "Cat does not exist"})
+        }
+        return data!.cats[0]
+    })
+}

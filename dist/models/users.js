@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findUserCats = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
+exports.findUserCatById = exports.findUserCats = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
 const mongodb_1 = require("mongodb");
 const connection_1 = require("../db/connection");
 const collection = connection_1.db.collection("users");
@@ -42,3 +42,24 @@ const findUserCats = (username) => {
     });
 };
 exports.findUserCats = findUserCats;
+const findUserCatById = (username, cat_id) => {
+    const filter = {
+        'username': username
+    };
+    const projection = {
+        'cats': { '$elemMatch': { 'cat_id': cat_id } }
+    };
+    if (isNaN(cat_id))
+        return Promise.reject({ status: 400, msg: "Invalid cat_id" });
+    return collection.findOne(filter, { projection })
+        .then(data => {
+        if (!data) {
+            return Promise.reject({ status: 404, msg: "Username does not exist" });
+        }
+        if (!data.cats) {
+            return Promise.reject({ status: 404, msg: "Cat does not exist" });
+        }
+        return data.cats[0];
+    });
+};
+exports.findUserCatById = findUserCatById;

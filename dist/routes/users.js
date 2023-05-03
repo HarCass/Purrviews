@@ -10,4 +10,5 @@ usersRouter.get('/', users_1.getUsers);
 usersRouter.post('/', users_1.postUser);
 usersRouter.get('/:username', users_1.getUserByUsername);
 usersRouter.get('/:username/cats', users_1.getUserCats);
+usersRouter.get('/:username/:cat_id', users_1.getCatById);
 exports.default = usersRouter;

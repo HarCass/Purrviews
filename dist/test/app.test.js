@@ -234,3 +234,40 @@ const expect = chai_1.default.expect;
         });
     });
 });
+(0, mocha_1.describe)('GET /api/users/:username/:cat_id', () => {
+    it('200: returns a cat object', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Scott687/1')
+            .then(res => {
+            assert_1.default.equal(res.status, 200);
+            const { cat } = res.body;
+            assert_1.default.equal(cat.cat_id, 1);
+            should.exist(cat);
+            cat.should.be.an('object');
+            cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+        });
+    });
+    it('404: returns a bad request if username is invalid', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Steve123/1')
+            .then(res => {
+            assert_1.default.equal(res.status, 404);
+            assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
+    it('400: returns a bad request if cat_id is invalid', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/users/Scott687/not_an_id')
+            .then(res => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid cat_id");
+        });
+    });
+    it("404: returns a status 404 and a message if cat_id doesnt exist", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get("/api/users/Scott687/999")
+            .then((res) => {
+            assert_1.default.equal(res.status, 404), assert_1.default.equal(res.body.msg, "Cat does not exist");
+        });
+    });
+});

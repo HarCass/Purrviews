@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCatById = exports.getUserCats = exports.deleteUser = exports.getUserByUsername = exports.postUser = exports.getUsers = void 0;
+exports.patchCatById = exports.getCatById = exports.getUserCats = exports.deleteUser = exports.getUserByUsername = exports.postUser = exports.getUsers = void 0;
 const users_1 = require("../models/users");
+const posts_1 = require("../models/posts");
 const getUsers = (req, res, next) => {
     return (0, users_1.findUsers)().then((users) => res.status(200).send({ users }));
 };
@@ -45,3 +46,12 @@ const getCatById = (req, res, next) => {
         .catch(next);
 };
 exports.getCatById = getCatById;
+const patchCatById = (req, res, next) => {
+    const { username, cat_id } = req.params;
+    const { missing } = req.body;
+    return (0, posts_1.checkUsernameExists)(username)
+        .then(() => (0, users_1.updateCatById)(username, Number(cat_id), missing))
+        .then(cat => res.status(200).send({ cat }))
+        .catch(next);
+};
+exports.patchCatById = patchCatById;

@@ -20,7 +20,7 @@ const checkUsernameExists = (username) => {
     return userCollection.findOne({ username })
         .then(data => {
         if (!data)
-            return Promise.reject({ status: 400, msg: 'Username does not exist' });
+            return Promise.reject({ status: 404, msg: 'Username does not exist' });
     });
 };
 exports.checkUsernameExists = checkUsernameExists;

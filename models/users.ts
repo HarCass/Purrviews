@@ -74,3 +74,21 @@ export const findUserCatById = (username: string, cat_id: number) => {
         return data!.cats[0]
     })
 }
+
+export const updateCatById = (username: string, cat_id: number, missing: boolean) => {
+
+    const query = { username: username, 'cats.cat_id': cat_id };
+    const updateDocument = {
+      $set: { "cats.$.missing": missing }
+    };
+
+    if (isNaN(cat_id)) return Promise.reject({status: 400, msg: "Invalid cat_id"})
+
+    return collection.findOneAndUpdate(query, updateDocument, {returnDocument : 'after'})
+    .then(({value}) => {
+        if (!value) {
+            return Promise.reject({status: 404, msg: "Cat does not exist"})
+        }
+       return value!.cats.filter((cat: any) => cat.cat_id === cat_id)[0];
+})
+};

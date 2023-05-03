@@ -98,7 +98,7 @@ const expect = chai_1.default.expect;
         });
     });
 });
-(0, mocha_1.describe)("POSTS /api/posts", () => {
+(0, mocha_1.describe)("POST /api/posts", () => {
     it("201: inserts a post into the database and returns the new post", () => {
         const newPost = {
             img_url: "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
@@ -148,7 +148,7 @@ const expect = chai_1.default.expect;
             .post("/api/posts")
             .send(newPost)
             .then((res) => {
-            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.status, 404);
             assert_1.default.equal(res.body.msg, "Username does not exist");
         });
     });
@@ -454,6 +454,83 @@ const expect = chai_1.default.expect;
             .get("/api/users/Scott687/999")
             .then((res) => {
             assert_1.default.equal(res.status, 404), assert_1.default.equal(res.body.msg, "Cat does not exist");
+        });
+    });
+});
+(0, mocha_1.describe)('PATCH /api/users/:username/cats/:cat_id', () => {
+    it('200: updates the specififed cats missing value and returns the new cat', () => {
+        const newMissing = {
+            missing: true
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/users/Scott687/cats/1`)
+            .send(newMissing)
+            .then(res => {
+            assert_1.default.equal(res.status, 200);
+            const { cat } = res.body;
+            should.exist(cat);
+            cat.should.be.an('object');
+            cat.should.have.keys("cat_id", "cat_name", "breed", "age", "characteristics", "cat_img", "missing");
+            assert_1.default.equal(cat.cat_id, 1);
+            assert_1.default.equal(cat.missing, true);
+        });
+    });
+    it("404: returns bad request if the username does not exist", () => {
+        const newMissing = {
+            missing: true
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/users/Steve123/cats/1`)
+            .send(newMissing)
+            .then((res) => {
+            assert_1.default.equal(res.status, 404);
+            assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
+    it("404: returns bad request if the cat_id does not exist", () => {
+        const newMissing = {
+            missing: true
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/users/Scott687/cats/999`)
+            .send(newMissing)
+            .then((res) => {
+            assert_1.default.equal(res.status, 404);
+            assert_1.default.equal(res.body.msg, "Cat does not exist");
+        });
+    });
+    it("400: returns bad request if the cat_id is invalid", () => {
+        const newMissing = {
+            missing: true
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/users/Scott687/cats/not_an_id`)
+            .send(newMissing)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid cat_id");
+        });
+    });
+    it('400: returns bad request if request body does not have missing property', () => {
+        const newMissing = {};
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/users/Scott687/cats/1`)
+            .send(newMissing)
+            .then(res => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it('400: returns bad request if request body does not have missing property', () => {
+        const newMissing = {
+            missing: 'hello'
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/users/Scott687/cats/1`)
+            .send(newMissing)
+            .then(res => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
         });
     });
 });

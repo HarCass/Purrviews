@@ -12,4 +12,5 @@ usersRouter.get("/:username", users_1.getUserByUsername);
 usersRouter.delete("/:username", users_1.deleteUser);
 usersRouter.get('/:username/cats', users_1.getUserCats);
 usersRouter.get('/:username/:cat_id', users_1.getCatById);
+usersRouter.patch('/:username/cats/:cat_id', users_1.patchCatById);
 exports.default = usersRouter;

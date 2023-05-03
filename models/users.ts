@@ -74,3 +74,11 @@ export const findUserCatById = (username: string, cat_id: number) => {
         return data!.cats[0]
     })
 }
+
+export const removeCatById = (username: string, id: number) => {
+    if(isNaN(id)) return Promise.reject({status: 400, msg: 'Invalid cat_id'});
+    return collection.updateOne({ username: username }, { $pull: { cats: { cat_id: { '$eq': id } } } })
+    .then(data =>  {
+        if (!data.modifiedCount) return Promise.reject({status:404, msg: 'Cat not found'});
+    });
+}

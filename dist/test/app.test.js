@@ -249,3 +249,34 @@ const expect = chai_1.default.expect;
         });
     });
 });
+mocha_1.describe.only("DELETE /api/posts/:post_id", () => {
+    it("204: Deletes a post by its post_id", () => {
+        return connection_1.db
+            .collection("posts")
+            .findOne()
+            .then((data) => {
+            return (0, supertest_1.default)(app_1.default)
+                .delete(`/api/posts/${data._id}`)
+                .expect(204);
+        });
+    });
+    it("404: Post not found", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/posts/645137bef81a9c03007ca79d")
+            .expect(404)
+            .then(({ body }) => {
+            expect(body.msg).to.equal("Post doesn't exist");
+        });
+    });
+    it("400: Invalid Post Id", () => {
+        return (0, supertest_1.default)(app_1.default)
+            .delete("/api/posts/645137bef8")
+            .expect(400)
+            .then(({ body }) => {
+            const invalidId = '645137bef8';
+            const isValidId = mongodb_1.ObjectId.isValid(invalidId);
+            assert_1.default.strictEqual(isValidId, false);
+            expect(body.msg).to.equal("Invalid Post Id");
+        });
+    });
+});

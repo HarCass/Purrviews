@@ -34,3 +34,17 @@ export const findPostById = (id: string) => {
         return data;
     })
 }
+
+export const deletePost = (post: string) => {
+    const isValidId = ObjectId.isValid(post)
+    if(isValidId === false){
+         return Promise.reject({ msg: "Invalid Post Id", status: 400 })
+    }
+    return collection.deleteOne({ _id: new ObjectId(post) }).then((post) => {
+        if (post.deletedCount === 0) {
+            return Promise.reject({ msg: "Post doesn't exist", status: 404 });
+        } else {
+            return post;
+        }
+    });
+}

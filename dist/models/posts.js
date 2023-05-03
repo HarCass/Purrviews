@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findPostById = exports.checkUsernameExists = exports.insertPost = exports.findPosts = void 0;
+exports.deletePost = exports.findPostById = exports.checkUsernameExists = exports.insertPost = exports.findPosts = void 0;
 const connection_1 = require("../db/connection");
 const mongodb_1 = require("mongodb");
 const collection = connection_1.db.collection('posts');
@@ -37,3 +37,18 @@ const findPostById = (id) => {
     });
 };
 exports.findPostById = findPostById;
+const deletePost = (post) => {
+    const isValidId = mongodb_1.ObjectId.isValid(post);
+    if (isValidId === false) {
+        return Promise.reject({ msg: "Invalid Post Id", status: 400 });
+    }
+    return collection.deleteOne({ _id: new mongodb_1.ObjectId(post) }).then((post) => {
+        if (post.deletedCount === 0) {
+            return Promise.reject({ msg: "Post doesn't exist", status: 404 });
+        }
+        else {
+            return post;
+        }
+    });
+};
+exports.deletePost = deletePost;

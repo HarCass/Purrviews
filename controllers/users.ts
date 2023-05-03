@@ -1,4 +1,4 @@
-import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats, findUserCatById, updateCatById } from "../models/users";
+import { findUsers, insertUser, findUsersByUsername, removeUser, findUserCats, findUserCatById, removeCatById, updateCatById } from "../models/users";
 import { checkUsernameExists } from "../models/posts";
 import { RequestHandler } from "express";
 
@@ -13,7 +13,7 @@ export const postUser: RequestHandler = (req, res, next) => {
         .catch(next);
 };
 
-export const getUserByUsername = (req: any, res: any, next: any) => {
+export const getUserByUsername: RequestHandler = (req, res, next) => {
     const { username } = req.params;
     return findUsersByUsername(username)
         .then((users) => {
@@ -22,7 +22,7 @@ export const getUserByUsername = (req: any, res: any, next: any) => {
         .catch(next);
 };
 
-export const deleteUser = (req: any, res: any, next: any) => {
+export const deleteUser: RequestHandler = (req, res, next) => {
     const { username } = req.params;
     return removeUser(username)
         .then(() => {
@@ -43,6 +43,14 @@ export const getCatById: RequestHandler = (req, res, next) => {
     const {username, cat_id} = req.params;
     return findUserCatById(username, Number(cat_id))
     .then(cat => res.status(200).send({cat}))
+    .catch(next);
+}
+
+export const deleteCatById: RequestHandler = (req, res, next) => {
+    const {username, cat_id} = req.params;
+    return checkUsernameExists(username)
+    .then(() => removeCatById(username, Number(cat_id)))
+    .then(() => res.sendStatus(204))
     .catch(next);
 }
 

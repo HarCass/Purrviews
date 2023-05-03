@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, postUser, getUserByUsername, getUserCats, deleteUser, getCatById, patchCatById } from "../controllers/users";
+import { getUsers, postUser, getUserByUsername, getUserCats, deleteUser, getCatById, deleteCatById, patchCatById } from "../controllers/users";
 
 const usersRouter = express.Router();
 
@@ -13,7 +13,9 @@ usersRouter.delete("/:username", deleteUser);
 
 usersRouter.get('/:username/cats', getUserCats);
 
-usersRouter.get('/:username/:cat_id', getCatById);
+usersRouter.get('/:username/cats/:cat_id', getCatById);
+
+usersRouter.delete('/:username/cats/:cat_id', deleteCatById);
 
 usersRouter.patch('/:username/cats/:cat_id', patchCatById);
 

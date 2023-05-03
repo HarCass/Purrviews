@@ -11,4 +11,5 @@ usersRouter.post("/", users_1.postUser);
 usersRouter.get("/:username", users_1.getUserByUsername);
 usersRouter.delete("/:username", users_1.deleteUser);
 usersRouter.get('/:username/cats', users_1.getUserCats);
+usersRouter.post('/:username/cats', users_1.postUserCats);
 exports.default = usersRouter;

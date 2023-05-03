@@ -24,7 +24,17 @@ const seed = (data: any) => {
                  },
                  cats: {
                     bsonType: "array",
-                    description: "'cats' must be an array"
+                    description: "'cats' must be an array",
+                    items: {bsonType: "object", required: ["age", "breed", "cat_id", "cat_img", "cat_name", "characteristics", "missing"],
+                     properties: {
+                     age: {bsonType: "int",description: "'age' must be a number"},
+                     breed: {bsonType: "string",description: "'breed' must be a string"},
+                     cat_id: {bsonType: "int",description: "'cat_id' must be a number"},
+                     cat_img: {bsonType: "string",description: "'cat_img' must be a string"},
+                     cat_name: {bsonType: "string",description: "'cat_name' must be a string"},
+                     characteristics: {bsonType: "array",description: "'characteristics' must be an array"},
+                     missing: {bsonType: "bool",description: "'missing' must be a bool"},
+                    }}
                  }
               }
            }

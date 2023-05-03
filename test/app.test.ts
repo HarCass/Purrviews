@@ -369,7 +369,7 @@ describe("DELETE /api/users/:username", () => {
     })
 })
 
-describe.only("DELETE /api/posts/:post_id", () => {
+describe("DELETE /api/posts/:post_id", () => {
     it("204: Deletes a post by its post_id", () => {
         return db
         .collection("posts")
@@ -400,3 +400,73 @@ describe.only("DELETE /api/posts/:post_id", () => {
         })
     })
 })
+
+describe.only("POSTS /api/users/:username/cats", () => {
+    it("201: inserts a cat into the database and returns the new cat", () => {
+        const newCat = {
+            cat_name: "Tabby",
+            age: 1,
+            breed: "Maine Coon",
+            characteristics: [
+              "curious",
+              "friendly"
+            ],
+            cat_img: "https://image.slidesharecdn.com/downloadfunnycatvideos-150906143836-lva1-app6891/85/download-funny-cat-videos-1-320.jpg?cb=1665607875",
+            missing: false
+        };
+        return request(app)
+            .post("/api/users/Scott687/cats")
+            .send(newCat)
+            .then((res) => {
+                assert.equal(res.status, 201);
+                const { cat } = res.body;
+                should.exist(cat);
+                cat.should.be.an("object");
+                cat.should.have.keys(
+                    "cat_id",
+                    "cat_img",
+                    "age",
+                    "breed",
+                    "cat_name",
+                    "characteristics",
+                    "missing",
+                );
+            });
+    });
+    it("400: returns a bad request if data format is wrong", () => {
+        const newCat = {
+            cat_name: "Tabby",
+            age: 1,
+            breed: "Maine Coon",
+            cat_img: "https://image.slidesharecdn.com/downloadfunnycatvideos-150906143836-lva1-app6891/85/download-funny-cat-videos-1-320.jpg?cb=1665607875",
+            missing: false
+        };
+        return request(app)
+            .post("/api/users/Scott687/cats")
+            .send(newCat)
+            .then((res) => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.msg, "Invalid format");
+            });
+    });
+    it("400: returns a bad request if the username does not exist", () => {
+        const newCat = {
+            cat_name: "Tabby",
+            age: 1,
+            breed: "Maine Coon",
+            characteristics: [
+              "curious",
+              "friendly"
+            ],
+            cat_img: "https://image.slidesharecdn.com/downloadfunnycatvideos-150906143836-lva1-app6891/85/download-funny-cat-videos-1-320.jpg?cb=1665607875",
+            missing: false
+        };
+        return request(app)
+            .post("/api/users/invaliduser/cats")
+            .send(newCat)
+            .then((res) => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.msg, "Username does not exist");
+            });
+    });
+});

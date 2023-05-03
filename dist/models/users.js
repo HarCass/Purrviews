@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
+exports.postedCat = exports.findUserCats = exports.removeUser = exports.findUsersByUsername = exports.insertUser = exports.findUsers = void 0;
 const mongodb_1 = require("mongodb");
 const connection_1 = require("../db/connection");
 const collection = connection_1.db.collection("users");
@@ -52,3 +52,21 @@ const findUserCats = (username) => {
     });
 };
 exports.findUserCats = findUserCats;
+const postedCat = (newCat, username) => {
+    return (0, exports.findUserCats)(username)
+        .then((allCats) => {
+        let highestCatId = 0;
+        for (const cat of allCats) {
+            if (cat.cat_id > highestCatId) {
+                highestCatId = cat.cat_id;
+            }
+        }
+        const newCatId = highestCatId + 1;
+        newCat.cat_id = newCatId;
+    })
+        .then(() => {
+        return collection.findOneAndUpdate({ username: username }, { $push: { cats: newCat } }, { returnDocument: "after" });
+    })
+        .then(({ value }) => { return value.cats[value.cats.length - 1]; });
+};
+exports.postedCat = postedCat;

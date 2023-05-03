@@ -34,3 +34,12 @@ export const findPostById = (id: string) => {
         return data;
     })
 }
+
+export const updatePostById = (id: string, incVotes: number) => {
+    if (!ObjectId.isValid(id)) return Promise.reject({status: 400, msg:"Invalid id"});
+    return collection.findOneAndUpdate({_id: new ObjectId(id)}, {$inc: {'votes': incVotes}}, {returnDocument : 'after'})
+    .then(({value}) => {
+        if (!value) return Promise.reject({status:400, msg: 'Post does not exist'})
+        return value;
+    });
+}

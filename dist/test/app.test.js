@@ -257,6 +257,52 @@ const expect = chai_1.default.expect;
             });
         });
     });
+    it("400: returns bad request if the post_id is invalid", () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/not_a_post`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid id");
+        });
+    });
+    it("400: returns bad request if the post_id does not exist", () => {
+        const newVotes = {
+            inc_votes: -1
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Post does not exist");
+        });
+    });
+    it("400: returns bad request if inc_votes does not exist on request", () => {
+        const newVotes = {};
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it("400: returns bad request if the inc_votes value is not a number", () => {
+        const newVotes = {
+            inc_votes: 'not_a_number'
+        };
+        return (0, supertest_1.default)(app_1.default)
+            .patch(`/api/posts/${new mongodb_1.ObjectId()}`)
+            .send(newVotes)
+            .then((res) => {
+            assert_1.default.equal(res.status, 400);
+            assert_1.default.equal(res.body.msg, "Invalid format");
+        });
+    });
 });
 (0, mocha_1.describe)("DELETE /api/users/:username", () => {
     it("204: Deletes a user by their username", () => {

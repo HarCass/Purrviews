@@ -25,5 +25,6 @@ export const patchPostById: RequestHandler = (req, res, next) => {
     const {post_id} = req.params;
     const {inc_votes} = req.body;
     return updatePostById(post_id, inc_votes)
-    .then(({value}) => res.status(200).send({post: value}));
+    .then(post => res.status(200).send({post}))
+    .catch(next);
 }

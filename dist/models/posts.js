@@ -38,6 +38,13 @@ const findPostById = (id) => {
 };
 exports.findPostById = findPostById;
 const updatePostById = (id, incVotes) => {
-    return collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $inc: { 'votes': incVotes } }, { returnDocument: 'after' });
+    if (!mongodb_1.ObjectId.isValid(id))
+        return Promise.reject({ status: 400, msg: "Invalid id" });
+    return collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, { $inc: { 'votes': incVotes } }, { returnDocument: 'after' })
+        .then(({ value }) => {
+        if (!value)
+            return Promise.reject({ status: 400, msg: 'Post does not exist' });
+        return value;
+    });
 };
 exports.updatePostById = updatePostById;

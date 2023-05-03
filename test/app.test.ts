@@ -271,6 +271,88 @@ describe("GET /api/users/:username", () => {
     });
 });
 
+describe('PATCH /api/posts/:post_id', () => {
+    it('200: updates the specififed posts votes and returns the new post', () => {
+        const newVotes = {
+            inc_votes: -1
+        }
+        return db
+        .collection("posts")
+        .findOne()
+        .then(data => {
+            return request(app)
+            .patch(`/api/posts/${data!._id}`)
+            .send(newVotes)
+            .then(res => {
+                assert.equal(res.status, 200);
+                const { post } = res.body;
+                should.exist(post);
+                post.should.be.an('object');
+                post.should.have.keys(
+                    "_id",
+                    "img_url",
+                    "location",
+                    "username",
+                    "description",
+                    "lat",
+                    "long",
+                    "votes",
+                    "posted_at"
+                );
+                assert.equal(post._id, data!._id);
+                assert.equal(post.votes, data!.votes - 1);
+            });
+        });
+    });
+    it("400: returns bad request if the post_id is invalid", () => {
+        const newVotes = {
+            inc_votes: -1
+        }
+        return request(app)
+        .patch(`/api/posts/not_a_post`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid id");
+        });
+    });
+    it("400: returns bad request if the post_id does not exist", () => {
+        const newVotes = {
+            inc_votes: -1
+        }
+        return request(app)
+        .patch(`/api/posts/${new ObjectId()}`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Post does not exist");
+        });
+    });
+    it("400: returns bad request if inc_votes does not exist on request", () => {
+        const newVotes = {
+        }
+        return request(app)
+        .patch(`/api/posts/${new ObjectId()}`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid format");
+        });
+    });
+    it("400: returns bad request if the inc_votes value is not a number", () => {
+        const newVotes = {
+            inc_votes: 'not_a_number'
+        }
+        return request(app)
+        .patch(`/api/posts/${new ObjectId()}`)
+        .send(newVotes)
+        .then((res) => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid format");
+        });
+    });
+});
+
 describe("DELETE /api/users/:username", () => {
     it("204: Deletes a user by their username", () => {
         return request(app)

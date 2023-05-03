@@ -109,7 +109,7 @@ describe("POST /api/users", () => {
     });
 });
 
-describe("POSTS /api/posts", () => {
+describe("POST /api/posts", () => {
     it("201: inserts a post into the database and returns the new post", () => {
         const newPost = {
             img_url: "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
@@ -156,7 +156,7 @@ describe("POSTS /api/posts", () => {
                 assert.equal(res.body.msg, "Invalid format");
             });
     });
-    it("400: returns a bad request if the username does not exist", () => {
+    it("404: returns a bad request if the username does not exist", () => {
         const newPost = {
             img_url: "https://i.ytimg.com/vi/da1E9rVKPMA/maxresdefault.jpg",
             location: "London, UK",
@@ -169,7 +169,7 @@ describe("POSTS /api/posts", () => {
             .post("/api/posts")
             .send(newPost)
             .then((res) => {
-                assert.equal(res.status, 400);
+                assert.equal(res.status, 404);
                 assert.equal(res.body.msg, "Username does not exist");
             });
     });
@@ -400,6 +400,165 @@ describe("DELETE /api/posts/:post_id", () => {
         })
     })
 })
+
+describe('GET /api/users/:username/cats/:cat_id', () => {
+    it('200: returns a cat object', () => {
+        return request(app)
+        .get('/api/users/Scott687/cats/1')
+        .then(res => {
+            assert.equal(res.status, 200);
+            const {cat} = res.body;
+            assert.equal(cat.cat_id, 1);
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');
+        });
+    });
+    it('404: returns a bad request if username is invalid', () => {
+        return request(app)
+        .get('/api/users/Steve123/cats/1')
+        .then(res => {
+            assert.equal(res.status, 404);
+            assert.equal(res.body.msg, "Username does not exist");
+        });
+    });
+    it('400: returns a bad request if cat_id is invalid', () => {
+        return request(app)
+        .get('/api/users/Scott687/cats/not_an_id')
+        .then(res => {
+            assert.equal(res.status, 400);
+            assert.equal(res.body.msg, "Invalid cat_id");
+        });
+    });
+    it("404: returns a status 404 and a message if cat_id doesnt exist", () => {
+        return request(app)
+            .get("/api/users/Scott687/cats/999")
+            .then((res) => {
+                assert.equal(res.status, 404), assert.equal(res.body.msg, "Cat does not exist");
+            });
+    });
+});
+
+describe('DELETE /api/users/:username/cats/:cat_id', () => {
+    it('204: returns no content and deletes the cat', () => {
+        return request(app)
+        .delete('/api/users/Scott687/cats/1')
+        .then(res => {
+            expect(res.status).to.equal(204);
+        });
+    });
+    it('404: returns a not found for a non existant username', () => {
+        return request(app)
+        .delete('/api/users/not_a_user/cats/1')
+        .then(res => {
+            expect(res.status).to.equal(404);
+            expect(res.body.msg).to.equal('Username does not exist')
+        });
+    });
+    it('400: returns a bad request for an invalid cat_id', () => {
+        return request(app)
+        .delete('/api/users/Scott687/cats/not_an_id')
+        .then(res => {
+            expect(res.status).to.equal(400);
+            expect(res.body.msg).to.equal('Invalid cat_id');
+        });
+    });
+    it('404: returns a not found for a non existant cat_id', () => {
+        return request(app)
+        .delete('/api/users/Scott687/cats/99999')
+        .then(res => {
+            expect(res.status).to.equal(404);
+            expect(res.body.msg).to.equal('Cat not found');
+        });
+    });
+});
+
+describe('PATCH /api/users/:username/cats/:cat_id', () => {
+    it('200: updates the specififed cats missing value and returns the new cat', () => {
+        const newMissing = {
+            missing: true
+        }
+            return request(app)
+            .patch(`/api/users/James456/cats/1`)
+            .send(newMissing)
+            .then(res => {
+                assert.equal(res.status, 200);
+                const { cat } = res.body;
+                should.exist(cat);
+                cat.should.be.an('object');
+                cat.should.have.keys(
+                    "cat_id",
+                    "cat_name",
+                    "breed",
+                    "age",
+                    "characteristics",
+                    "cat_img",
+                    "missing",
+                );
+                assert.equal(cat.cat_id, 1);
+                assert.equal(cat.missing, true);
+            });
+        });
+        it("404: returns bad request if the username does not exist", () => {
+            const newMissing = {
+                missing: true
+            }
+            return request(app)
+            .patch(`/api/users/Steve123/cats/1`)
+            .send(newMissing)
+            .then((res) => {
+                assert.equal(res.status, 404);
+                assert.equal(res.body.msg, "Username does not exist");
+            });
+        });
+        it("404: returns bad request if the cat_id does not exist", () => {
+            const newMissing = {
+                missing: true
+            }
+            return request(app)
+            .patch(`/api/users/Scott687/cats/999`)
+            .send(newMissing)
+            .then((res) => {
+                assert.equal(res.status, 404);
+                assert.equal(res.body.msg, "Cat does not exist");
+            });
+        });
+        it("400: returns bad request if the cat_id is invalid", () => {
+            const newMissing = {
+                missing: true
+            }
+            return request(app)
+            .patch(`/api/users/Scott687/cats/not_an_id`)
+            .send(newMissing)
+            .then((res) => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.msg, "Invalid cat_id");
+            });
+        });
+        it('400: returns bad request if request body does not have missing property', () => {
+            const newMissing = {
+            }
+                return request(app)
+                .patch(`/api/users/James456/cats/1`)
+                .send(newMissing)
+                .then(res => {
+                    assert.equal(res.status, 400);
+                    assert.equal(res.body.msg, "Invalid format");
+                });
+            });
+            it('400: returns bad request if request body has invalid missing value', () => {
+                const newMissing = {
+                    missing: 'hello'
+                }
+                    return request(app)
+                    .patch(`/api/users/James456/cats/1`)
+                    .send(newMissing)
+                    .then(res => {
+                        assert.equal(res.status, 400);
+                        assert.equal(res.body.msg, "Invalid format");
+                    });
+                });
+    });
 
 describe("POSTS /api/users/:username/cats", () => {
     it("201: inserts a cat into the database and returns the new cat", () => {

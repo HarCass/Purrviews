@@ -20,13 +20,28 @@ describe("Unavailable Endpoint", () => {
 
 describe("GET /api/users", () => {
     it("200: returns an array of all users", () => {
+        interface userType {
+            _id: string,
+            avatar: string,
+            description: string,
+            username: string,
+            cats: {
+                cat_name: string,
+                age: number,
+                breed: string,
+                characteristics: string[],
+                cat_img: string,
+                missing: boolean,
+                cat_id: number
+            }[]
+        }
         return request(app)
             .get("/api/users")
             .then((res) => {
                 assert.equal(res.status, 200);
                 const { users } = res.body;
                 assert.equal(users.length > 0, true);
-                users.forEach((user: any) => {
+                users.forEach((user: userType) => {
                     should.exist(user);
                     user.should.be.an("object");
                     user.should.have.keys("_id", "avatar", "description", "username", "cats");
@@ -37,13 +52,24 @@ describe("GET /api/users", () => {
 
 describe("GET /api/posts", () => {
     it("200: returns an array of all posts", () => {
+        interface postType {
+            _id: string,
+            img_url: string,
+            location: string,
+            username: string,
+            description: string,
+            lat: number,
+            long: number
+            votes: number,
+            posted_at: string
+        }
         return request(app)
             .get("/api/posts")
             .then((res) => {
                 assert.equal(res.status, 200);
                 const { posts } = res.body;
                 assert.equal(posts.length > 0, true);
-                posts.forEach((post: any) => {
+                posts.forEach((post: postType) => {
                     should.exist(post);
                     post.should.be.an("object");
                     post.should.have.keys(
@@ -223,13 +249,22 @@ describe("GET /api/posts/:post_id", () => {
 
 describe('GET /api/users/:username/cats', () => {
     it('200: returns an array of cat objects', () => {
+        interface catType {
+            cat_name: string,
+            age: number,
+            breed: string,
+            characteristics: string[],
+            cat_img: string,
+            missing: boolean,
+            cat_id: number
+        }
         return request(app)
         .get('/api/users/Scott687/cats')
         .then(res => {
             assert.equal(res.status, 200);
             const {cats} = res.body;
             assert.equal(cats.length > 0, true);
-            cats.forEach((cat: any) => {
+            cats.forEach((cat: catType) => {
                 should.exist(cat);
                 cat.should.be.an('object');
                 cat.should.have.keys('cat_id', 'cat_name', 'age', 'breed', 'characteristics', 'cat_img', 'missing');

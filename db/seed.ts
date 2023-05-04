@@ -1,6 +1,11 @@
 import { db } from "./connection";
 
-const seed = (data: any) => {
+interface seedType {
+   users: object[],
+   posts: object[],
+}
+
+const seed = (data: seedType) => {
     return db.dropCollection('users')
     .then(() => db.dropCollection('posts'))
     .then(() => db.createCollection('users', {
@@ -63,6 +68,18 @@ const seed = (data: any) => {
                     bsonType: "double",
                     description: "'long' must be a double and is required"
                  },
+                 votes: {
+                  bsonType: "int",
+                  description: "'votes' must be an integer"
+                 },
+                 description: {
+                  bsonType: "string",
+                  description: "'description' must be a string"
+                 },
+                 posted_at: {
+                  bsonType: "string",
+                  description: "'posted_at' must be an ISO date string"
+                 }
               }
            }
         }

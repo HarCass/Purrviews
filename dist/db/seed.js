@@ -64,6 +64,18 @@ const seed = (data) => {
                         bsonType: "double",
                         description: "'long' must be a double and is required"
                     },
+                    votes: {
+                        bsonType: "int",
+                        description: "'votes' must be an integer"
+                    },
+                    description: {
+                        bsonType: "string",
+                        description: "'description' must be a string"
+                    },
+                    posted_at: {
+                        bsonType: "string",
+                        description: "'posted_at' must be an ISO date string"
+                    }
                 }
             }
         }

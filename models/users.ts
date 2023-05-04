@@ -1,20 +1,37 @@
-import { ObjectId, ReturnDocument } from "mongodb";
+import { ObjectId, PushOperator } from "mongodb";
 import { db } from "../db/connection";
 
 const collection = db.collection("users");
+
+interface catType {
+    cat_name: string,
+    age: number,
+    breed: string,
+    characteristics: string[],
+    cat_img: string,
+    missing: boolean,
+    cat_id: number
+}
+
+interface userType {
+    username: string,
+    description: string,
+    avatar: string,
+    cats: catType[]
+}
 
 export const findUsers = () => {
     return collection.find({}).toArray();
 };
 
-export const insertUser = (user: any) => {
+export const insertUser = (user: userType) => {
     user.cats = [];
     return collection.insertOne(user).then((data) => {
         return collection.findOne({ _id: new ObjectId(data.insertedId) });
     });
 };
 
-export const findUsersByUsername = (username: any) => {
+export const findUsersByUsername = (username: string) => {
     return collection.findOne({ username: username }).then((users) => {
         if (users === null) {
             return Promise.reject({ msg: "Username doesn't exist", status: 404 });
@@ -24,7 +41,7 @@ export const findUsersByUsername = (username: any) => {
     });
 };
 
-export const removeUser = (username: any) => {
+export const removeUser = (username: string) => {
     return collection.deleteOne({ username: username }).then((users) => {
         if (users.deletedCount === 0) {
             return Promise.reject({ msg: "Username doesn't exist", status: 404 });
@@ -51,7 +68,7 @@ export const findUserCats = (username: string) => {
     });
 };
 
-export const postedCat = (newCat: any, username: string) => {
+export const postedCat = (newCat: catType, username: string) => {
     return findUserCats(username)
     .then((allCats) => {
        let highestCatId = 0;
@@ -66,7 +83,7 @@ export const postedCat = (newCat: any, username: string) => {
        newCat.cat_id = newCatId;
     })
     .then(() => {
-        return collection.findOneAndUpdate({username: username}, {$push:{cats: newCat }}, {returnDocument: "after"})
+        return collection.findOneAndUpdate({username: username}, {$push:{cats: newCat } as PushOperator<Document>}, {returnDocument: "after"})
     })
     .then(({value}) => { return value!.cats[value!.cats.length - 1]})
 }

@@ -1,9 +1,18 @@
 import * as testData from './data/test/index';
+import * as devData from './data/dev/index';
+import dotenv from 'dotenv';
 import { connection } from "./connection";
 import seed from './seed';
 
-const runSeed = () => {
-    seed(testData).then(() => connection.close())
+dotenv.config();
+
+interface seedType {
+    users: object[],
+    posts: object[],
+ }
+
+const runSeed = (data: seedType) => {
+    seed(data).then(() => connection.close())
 }
 
-runSeed();
+process.env.NODE_ENV ? runSeed(testData) : runSeed(devData);

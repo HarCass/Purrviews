@@ -60,7 +60,7 @@ const users = [
   {
     "username": "Elena123",
     "description": "Super cool cat lover",
-    "avatar": "https://i.pinimg.com/736x/a7/9a/f3/a79af309957138af9ef7696b261b71fe.jp…",
+    "avatar": "https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_4x3.png",
     "cats": [
       {
         "cat_id": 1,
@@ -77,7 +77,7 @@ const users = [
     ]
   },
   {
-    "avatar": "https://files.slack.com/files-tmb/T01KPE0QGCD-F055BAS05B7-0b1afbdc12/image_360.png",
+    "avatar": "https://img.freepik.com/free-photo/close-up-portrait-beautiful-cat_23-2149214419.jpg",
     "description": "I like bald cats",
     "username": "Eeevee18",
     "cats": [
@@ -98,7 +98,7 @@ const users = [
   {
     "username": "Emma123",
     "description": "Cat mom of 3 fur babies",
-    "avatar": "https://www.rd.com/wp-content/uploads/2021/01/GettyImages-1081574838-e1610387537746.jpg",
+    "avatar": "https://i.pinimg.com/originals/d3/64/d2/d364d2e6f7a7ccd4a02c44b6e26ea25a.jpg",
     "cats": [
         {
             "cat_id": 1,

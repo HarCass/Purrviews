@@ -110,7 +110,7 @@ const users = [
                 "playful",
                 "talkative"
             ],
-            "cat_img": "https://i.ytimg.com/vi/UQYoLoJMpYQ/maxresdefault.jpg",
+            "cat_img": "https://images.unsplash.com/photo-1603277160434-df7471138363?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
             "missing": false
         },
         {
@@ -122,7 +122,7 @@ const users = [
                 "lazy",
                 "affectionate"
             ],
-            "cat_img": "https://i.pinimg.com/originals/5b/7f/f9/5b7ff99d74021d3b2ef94db6cd5655b8.jpg",
+            "cat_img": "https://images.unsplash.com/photo-1524642603405-a7c76bcde7eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
             "missing": true
         },
         {
@@ -134,7 +134,7 @@ const users = [
                 "sassy",
                 "independent"
             ],
-            "cat_img": "https://i.ytimg.com/vi/YzW1fSvRVo4/maxresdefault.jpg",
+            "cat_img": "https://images.unsplash.com/photo-1568152950566-c1bf43f4ab28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80",
             "missing": false
         }
     ]

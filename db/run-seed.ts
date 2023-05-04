@@ -15,4 +15,4 @@ const runSeed = (data: seedType) => {
     seed(data).then(() => connection.close())
 }
 
-process.env.NODE_ENV ? runSeed(testData) : runSeed(devData);
+process.env.NODE_ENV?.trimEnd() === 'test' ? runSeed(testData) : runSeed(devData);

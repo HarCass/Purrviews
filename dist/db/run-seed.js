@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const testData = __importStar(require("./data/test/index"));
 const devData = __importStar(require("./data/dev/index"));
@@ -35,4 +36,4 @@ dotenv_1.default.config();
 const runSeed = (data) => {
     (0, seed_1.default)(data).then(() => connection_1.connection.close());
 };
-process.env.NODE_ENV ? runSeed(testData) : runSeed(devData);
+((_a = process.env.NODE_ENV) === null || _a === void 0 ? void 0 : _a.trimEnd()) === 'test' ? runSeed(testData) : runSeed(devData);

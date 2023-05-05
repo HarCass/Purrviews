@@ -10,6 +10,7 @@ const assert_1 = __importDefault(require("assert"));
 const connection_1 = require("../db/connection");
 const chai_1 = __importDefault(require("chai"));
 const mongodb_1 = require("mongodb");
+const endpoints_1 = __importDefault(require("../endpoints"));
 const should = chai_1.default.should();
 const expect = chai_1.default.expect;
 (0, mocha_1.after)(() => connection_1.connection.close());
@@ -497,7 +498,7 @@ const expect = chai_1.default.expect;
         });
     });
 });
-(0, mocha_1.describe)("POSTS /api/users/:username/cats", () => {
+(0, mocha_1.describe)("POST /api/users/:username/cats", () => {
     it("201: inserts a cat into the database and returns the new cat", () => {
         const newCat = {
             cat_name: "Tabby",
@@ -555,6 +556,38 @@ const expect = chai_1.default.expect;
             .then((res) => {
             assert_1.default.equal(res.status, 400);
             assert_1.default.equal(res.body.msg, "Username does not exist");
+        });
+    });
+});
+(0, mocha_1.describe)('GET /api/cats/missing', () => {
+    it('200: returns an array of users with their missing cats', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api/cats/missing')
+            .then(res => {
+            expect(res.status).to.equal(200);
+            const { users } = res.body;
+            assert_1.default.equal(users.length > 0, true);
+            users.forEach((user) => {
+                should.exist(user);
+                user.should.be.an('object');
+                user.should.have.keys('_id', 'username', 'cats');
+                user.cats.forEach((cat) => {
+                    should.exist(cat);
+                    cat.should.be.an('object');
+                    cat.should.have.keys("cat_id", "cat_name", "breed", "age", "characteristics", "cat_img", "missing");
+                    assert_1.default.equal(cat.missing, true);
+                });
+            });
+        });
+    });
+});
+(0, mocha_1.describe)('GET /api', () => {
+    it('200: returns a list of all endpoints', () => {
+        return (0, supertest_1.default)(app_1.default)
+            .get('/api')
+            .then(res => {
+            expect(res.status).to.equal(200);
+            expect(res.body.endpoints).to.deep.equal(endpoints_1.default);
         });
     });
 });

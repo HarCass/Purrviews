@@ -133,6 +133,6 @@ export const updateCatById = (username: string, cat_id: number, missing: boolean
         if (!value) {
             return Promise.reject({status: 404, msg: "Cat does not exist"})
         }
-       return value!.cats.filter((cat: any) => cat.cat_id === cat_id)[0];
-})
+       return value!.cats.filter((cat: catType) => cat.cat_id === cat_id)[0];
+    });
 };

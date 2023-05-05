@@ -668,12 +668,6 @@ describe("POST /api/users/:username/cats", () => {
 
 describe('GET /api/cats/missing', () => {
     it('200: returns an array of users with their missing cats', () => {
-        interface missingType {
-            _id: string,
-            username: string,
-            cats: []
-        }
-
         interface catType {
             cat_name: string,
             age: number,
@@ -682,6 +676,12 @@ describe('GET /api/cats/missing', () => {
             cat_img: string,
             missing: boolean,
             cat_id: number
+        }
+
+        interface missingType {
+            _id: string,
+            username: string,
+            cats: catType[]
         }
 
         return request(app)

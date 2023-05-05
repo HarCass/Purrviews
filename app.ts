@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', apiRouter);
+
 app.use(customErrors);
 app.use(dbErrors);
 app.use(serverErrors);

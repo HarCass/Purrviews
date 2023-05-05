@@ -62,7 +62,7 @@ const users = [
     {
         "username": "Elena123",
         "description": "Super cool cat lover",
-        "avatar": "https://i.pinimg.com/736x/a7/9a/f3/a79af309957138af9ef7696b261b71fe.jp…",
+        "avatar": "https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_4x3.png",
         "cats": [
             {
                 "cat_id": 1,
@@ -79,7 +79,7 @@ const users = [
         ]
     },
     {
-        "avatar": "https://files.slack.com/files-tmb/T01KPE0QGCD-F055BAS05B7-0b1afbdc12/image_360.png",
+        "avatar": "https://img.freepik.com/free-photo/close-up-portrait-beautiful-cat_23-2149214419.jpg",
         "description": "I like bald cats",
         "username": "Eeevee18",
         "cats": [
@@ -100,7 +100,7 @@ const users = [
     {
         "username": "Emma123",
         "description": "Cat mom of 3 fur babies",
-        "avatar": "https://www.rd.com/wp-content/uploads/2021/01/GettyImages-1081574838-e1610387537746.jpg",
+        "avatar": "https://i.pinimg.com/originals/d3/64/d2/d364d2e6f7a7ccd4a02c44b6e26ea25a.jpg",
         "cats": [
             {
                 "cat_id": 1,
@@ -112,7 +112,7 @@ const users = [
                     "playful",
                     "talkative"
                 ],
-                "cat_img": "https://i.ytimg.com/vi/UQYoLoJMpYQ/maxresdefault.jpg",
+                "cat_img": "https://images.unsplash.com/photo-1603277160434-df7471138363?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
                 "missing": false
             },
             {
@@ -124,7 +124,7 @@ const users = [
                     "lazy",
                     "affectionate"
                 ],
-                "cat_img": "https://i.pinimg.com/originals/5b/7f/f9/5b7ff99d74021d3b2ef94db6cd5655b8.jpg",
+                "cat_img": "https://images.unsplash.com/photo-1524642603405-a7c76bcde7eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
                 "missing": true
             },
             {
@@ -136,7 +136,7 @@ const users = [
                     "sassy",
                     "independent"
                 ],
-                "cat_img": "https://i.ytimg.com/vi/YzW1fSvRVo4/maxresdefault.jpg",
+                "cat_img": "https://images.unsplash.com/photo-1568152950566-c1bf43f4ab28?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80",
                 "missing": false
             }
         ]

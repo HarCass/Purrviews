@@ -6,10 +6,10 @@ import http from 'http';
 import { Server } from "socket.io";
 
 const app = express();
-const httpServer = new http.Server(app);
+const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "exp://10.0.0.6:19000",
+        origin: 'http:/10.0.0.13',
     }
 });
 
@@ -20,13 +20,34 @@ interface chatUser {
     username: string,
     socketId: string
 }
-let users: string[] = [];
+let users: chatUser[] = [];
+
 io.on('connection', (socket) => {
     console.log(`${socket.id} user connected!`);
-    if (!users.includes(socket.id)) users.push(socket.id);
+
+    socket.on('newUser', (user) => {
+        let newUser = true;
+        for (const activeUser of users) {
+            if(user.username === activeUser.username) {
+                newUser = false;
+                break;
+            }
+        }
+
+        if (newUser) {
+            users.push(user);
+        }
+        io.emit('newUserRes', users);
+    });
+
+    socket.on('directMessage', (message) => {
+        console.log(message);
+        io.emit('ping', 'recieved');
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected');
-        users = users.filter((user) => user !== socket.id);
+        users = users.filter((user) => user.socketId !== socket.id);
         socket.disconnect();
     });
 });
@@ -37,4 +58,4 @@ app.use(customErrors);
 app.use(dbErrors);
 app.use(serverErrors);
 
-export default app;
+export default httpServer;

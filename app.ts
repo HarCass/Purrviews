@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
 });
 
 app.use('/api', apiRouter);
+
 app.use(customErrors);
 app.use(dbErrors);
 app.use(serverErrors);

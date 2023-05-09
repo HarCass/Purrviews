@@ -5,6 +5,7 @@ import assert from "assert";
 import { connection, db } from "../db/connection";
 import chai from "chai";
 import { ObjectId } from "mongodb";
+import endpoints from "../endpoints";
 const should = chai.should();
 const expect = chai.expect;
 
@@ -595,7 +596,7 @@ describe('PATCH /api/users/:username/cats/:cat_id', () => {
                 });
     });
 
-describe("POSTS /api/users/:username/cats", () => {
+describe("POST /api/users/:username/cats", () => {
     it("201: inserts a cat into the database and returns the new cat", () => {
         const newCat = {
             cat_name: "Tabby",
@@ -662,5 +663,63 @@ describe("POSTS /api/users/:username/cats", () => {
                 assert.equal(res.status, 400);
                 assert.equal(res.body.msg, "Username does not exist");
             });
+    });
+});
+
+describe('GET /api/cats/missing', () => {
+    it('200: returns an array of users with their missing cats', () => {
+        interface catType {
+            cat_name: string,
+            age: number,
+            breed: string,
+            characteristics: string[],
+            cat_img: string,
+            missing: boolean,
+            cat_id: number
+        }
+
+        interface missingType {
+            _id: string,
+            username: string,
+            cats: catType[]
+        }
+
+        return request(app)
+        .get('/api/cats/missing')
+        .then(res => {
+            expect(res.status).to.equal(200);
+            const {users} = res.body;
+            assert.equal(users.length > 0, true);
+            users.forEach((user: missingType) => {
+                should.exist(user);
+                user.should.be.an('object');
+                user.should.have.keys('_id', 'username', 'cats');
+                user.cats.forEach((cat: catType) => {
+                    should.exist(cat);
+                    cat.should.be.an('object');
+                    cat.should.have.keys(
+                        "cat_id",
+                        "cat_name",
+                        "breed",
+                        "age",
+                        "characteristics",
+                        "cat_img",
+                        "missing",
+                    );
+                    assert.equal(cat.missing, true);
+                });
+            });
+        });
+    });
+});
+
+describe('GET /api', () => {
+    it('200: returns a list of all endpoints', () => {
+        return request(app)
+        .get('/api')
+        .then(res => {
+            expect(res.status).to.equal(200);
+            expect(res.body.endpoints).to.deep.equal(endpoints);
+        });
     });
 });

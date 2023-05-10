@@ -37,8 +37,10 @@ io.on('connection', (socket) => {
     console.log(`${socket.id} user connected!`);
 
     socket.on('newUser', (username) => {
-        socket.data = username;
-        io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+        if (socket.data !== username) {
+            socket.data = username;
+            io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+        }
     });
 
     socket.on('roomJoin', (data: {id:string, username:string}) => {

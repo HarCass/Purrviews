@@ -22,8 +22,10 @@ const rooms = [];
 io.on('connection', (socket) => {
     console.log(`${socket.id} user connected!`);
     socket.on('newUser', (username) => {
-        socket.data = username;
-        io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+        if (socket.data !== username) {
+            socket.data = username;
+            io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+        }
     });
     socket.on('roomJoin', (data) => {
         let newRoom = true;
@@ -55,7 +57,7 @@ io.on('connection', (socket) => {
             if (room.users.length <= 0)
                 rooms.splice(index, 1);
         });
-        console.log(`${socket.id} left room ${data.id}`);
+        console.log(`${socket.id} left room ${data.id === 'self' ? socket.data : data.id}`);
     });
     socket.on('message', (message) => {
         io.emit('messageRes', message);

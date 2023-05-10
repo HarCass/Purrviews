@@ -16,38 +16,72 @@ const io = new Server(httpServer, {
 app.use(cors());
 app.use(express.json());
 
-interface chatUser {
+interface chatUserType {
     username: string,
     socketId: string
 }
-let users: chatUser[] = [];
+
+interface chatRoomType {
+    id: string,
+    users: chatUserType[],
+}
+
+interface messageType {
+    body: string,
+    roomId: string
+}
+
+const rooms: chatRoomType[]  = [];
 
 io.on('connection', (socket) => {
     console.log(`${socket.id} user connected!`);
 
-    socket.on('newUser', (user) => {
-        let newUser = true;
-        for (const activeUser of users) {
-            if(user.username === activeUser.username) {
-                newUser = false;
+    socket.on('newUser', (username) => {
+        socket.data = username;
+        io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+    });
+
+    socket.on('roomJoin', (data: {id:string, username:string}) => {
+        let newRoom = true;
+        for (const room of rooms) {
+            if (data.id === room.id) {
+                newRoom = false;
                 break;
             }
         }
-
-        if (newUser) {
-            users.push(user);
+        if (newRoom) rooms.push({id: data.id, users: [{username: data.username, socketId: socket.id}]});
+        else {
+            rooms.forEach(room => {
+                if (data.id === room.id) room.users.push({username: data.username, socketId: socket.id});
+            });
         }
-        io.emit('newUserRes', users);
+        console.log(`${socket.id} joined room ${data.id}`);
     });
 
-    socket.on('directMessage', (message) => {
-        console.log(message);
-        io.emit('ping', 'recieved');
+    socket.on('roomLeave', (data: {id:string}) => {
+        rooms.forEach((room, index) => {
+            if (room.id === data.id) {
+                room.users.forEach((user, index) => {
+                    if (user.socketId === socket.id) room.users.splice(index, 1);
+                });
+            };
+            if (room.users.length <= 0) rooms.splice(index, 1);
+        });
+        console.log(`${socket.id} left room ${data.id}`);
+    });
+
+    socket.on('message', (message: messageType) => {
+        io.emit('messageRes', message);
     });
 
     socket.on('disconnect', () => {
-        console.log('User disconnected');
-        users = users.filter((user) => user.socketId !== socket.id);
+        rooms.forEach((room, index) => {
+            room.users.forEach((user, index) => {
+                if (user.socketId === socket.id) room.users.splice(index, 1);
+            });
+            if (room.users.length <= 0) rooms.splice(index, 1);
+        });
+        console.log(`${socket.id} user disconnected!`);
         socket.disconnect();
     });
 });

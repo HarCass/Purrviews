@@ -9,7 +9,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: 'http:/10.0.0.13',
+        origin: '*',
     }
 });
 

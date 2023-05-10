@@ -13,7 +13,7 @@ const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
 const io = new socket_io_1.Server(httpServer, {
     cors: {
-        origin: 'http:/10.0.0.13',
+        origin: '*',
     }
 });
 app.use((0, cors_1.default)());

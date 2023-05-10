@@ -17,7 +17,7 @@ const io = new socket_io_1.Server(httpServer, {
     }
 });
 app.use((0, cors_1.default)());
-app.use(express_1.default.json());
+app.use(express_1.default.json({ limit: '5mb' }));
 const rooms = [];
 io.on('connection', (socket) => {
     console.log(`${socket.id} user connected!`);

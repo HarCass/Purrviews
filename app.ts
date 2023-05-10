@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
             };
             if (room.users.length <= 0) rooms.splice(index, 1);
         });
-        console.log(`${socket.id} left room ${data.id}`);
+        console.log(`${socket.id} left room ${data.id === 'self' ? socket.data : data.id}`);
     });
 
     socket.on('message', (message: messageType) => {

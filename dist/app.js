@@ -13,17 +13,19 @@ const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
 const io = new socket_io_1.Server(httpServer, {
     cors: {
-        origin: 'http:/10.0.0.13',
+        origin: '*',
     }
 });
 app.use((0, cors_1.default)());
-app.use(express_1.default.json());
+app.use(express_1.default.json({ limit: '5mb' }));
 const rooms = [];
 io.on('connection', (socket) => {
     console.log(`${socket.id} user connected!`);
     socket.on('newUser', (username) => {
-        socket.data = username;
-        io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+        if (socket.data !== username) {
+            socket.data = username;
+            io.emit('newUserRes', `${socket.id} given username ${socket.data}`);
+        }
     });
     socket.on('roomJoin', (data) => {
         let newRoom = true;
@@ -55,7 +57,7 @@ io.on('connection', (socket) => {
             if (room.users.length <= 0)
                 rooms.splice(index, 1);
         });
-        console.log(`${socket.id} left room ${data.id}`);
+        console.log(`${socket.id} left room ${data.id === 'self' ? socket.data : data.id}`);
     });
     socket.on('message', (message) => {
         io.emit('messageRes', message);

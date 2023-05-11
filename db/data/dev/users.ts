@@ -2,13 +2,13 @@ const users = [
   {
     "username": "Harry111",
     "description": "I like maps and cats",
-    "avatar": "https://thumbor.bigedition.com/funniest-cats-internet/aOWXYzmGnJrmNpBMbfJ247e7Sac=/0x13:800x614/800x0/filters:quality(80)/granite-web-prod/cc/fa/ccfa37b8659442e9a994fe07d0534ac8.jpeg",
+    "avatar": "https://media.istockphoto.com/id/1281620692/photo/gray-tabby-cat-lays-on-the-neck-of-a-young-man-close-up.jpg?s=612x612&w=0&k=20&c=N7FeUErVJf91pY1U6pYtZJycQAriycxhiC2y4wxoY_w=",
     "cats": []
   },
   {
     "username": "James456",
     "description": "Cats are life",
-    "avatar": "https://cdn.shopify.com/s/files/1/0293/7680/6956/files/cat-caution-children-at-play-ments-ella-74-7827-star_480x480.jpg?v=1603733801",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM_vNhtyUMbEu6lN-P12kKr7HMyxepGB8Okw&usqp=CAU",
     "cats": [
         {
             "cat_id": 1,
@@ -27,7 +27,7 @@ const users = [
   {
     "username": "Scott687",
     "description": "Cattu in a socku",
-    "avatar": "https://i2-prod.dailystar.co.uk/incoming/article20472638.ece/ALTERNATES/s1227b/httpscdnimagesdailystarcoukdynamic122photos791000900x738434791",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaDBr1on3ktPfOI4MuQFDO50oofVHRT4BSeA&usqp=CAU",
     "cats": [
         {
             "cat_id": 1,
@@ -60,7 +60,7 @@ const users = [
   {
     "username": "Elena123",
     "description": "Super cool cat lover",
-    "avatar": "https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_4x3.png",
+    "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWjGV24443WikhuxHJarvuA60ykxdxGavbaQ&usqp=CAU",
     "cats": [
       {
         "cat_id": 1,
@@ -77,7 +77,7 @@ const users = [
     ]
   },
   {
-    "avatar": "https://img.freepik.com/free-photo/close-up-portrait-beautiful-cat_23-2149214419.jpg",
+    "avatar": "https://media.istockphoto.com/id/1198100351/photo/portrait-of-beautiful-and-fluffy-tri-colored-tabby-cat-at-home-natural-light.jpg?s=612x612&w=0&k=20&c=4p4gjq48aYnD9jNQf9yazpGCpn620btJ5H8VJX3OElo=",
     "description": "I like bald cats",
     "username": "Eeevee18",
     "cats": [
@@ -98,7 +98,7 @@ const users = [
   {
     "username": "Emma123",
     "description": "Cat mom of 3 fur babies",
-    "avatar": "https://i.pinimg.com/originals/d3/64/d2/d364d2e6f7a7ccd4a02c44b6e26ea25a.jpg",
+    "avatar": "https://media.istockphoto.com/id/1170733516/photo/kitten-and-the-owner.jpg?b=1&s=170667a&w=0&k=20&c=IbJP_ZkjigFQNS28bU48ZofbDtlXv6xsQA941xVwboI=",
     "cats": [
         {
             "cat_id": 1,
